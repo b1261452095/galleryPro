@@ -1,0 +1,23 @@
+server:
+  port: 8888
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: picture-server
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://14.103.206.253:3306/b_picture
+    name: root
+    password: b12614520952
+
+mybatis-plus:
+
+
+knife4j:
+  enable: true
+  basic:
+    enable: false
+    username: api # Basic认证用户名
+    password: 1024 # Basic认证密码
