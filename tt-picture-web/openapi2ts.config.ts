@@ -1,4 +1,4 @@
-import {} from '@umijs/openapi'
+import { } from '@umijs/openapi'
 
 export default {
   requestLibPath: "import request from '@/utils/request'",
@@ -7,6 +7,6 @@ export default {
   // - /v2/api-docs (Swagger 2.0)
   // - /v3/api-docs (OpenAPI 3.0)
   // - /swagger/v2/api-docs
-  schemaPath: 'http://localhost:8888/api/v3/api-docs',
+  schemaPath: 'http://localhost:8888/api/v2/api-docs',
   serversPath: './src',
 }

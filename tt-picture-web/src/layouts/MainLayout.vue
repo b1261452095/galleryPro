@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { useLoginUserStore } from '@/stores/useLoginUserStore'
+import { UserOutlined } from '@ant-design/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
+const loginUserStore = useLoginUserStore()
 const currentYear = new Date().getFullYear()
 
 const navItems = [
@@ -21,9 +24,16 @@ const navigateTo = (path: string) => {
   router.push(path)
 }
 
+const isLoggedIn = computed(() => loginUserStore.isLoggedIn)
+
 const handleLogin = () => {
-  // TODO: 实现登录逻辑
+  // TODO: 打开登录弹窗或跳转到登录页
   console.log('点击登录')
+}
+
+const handleLogout = () => {
+  loginUserStore.clearLoginUser()
+  console.log('已退出登录')
 }
 </script>
 
@@ -46,7 +56,25 @@ const handleLogin = () => {
           </a>
         </nav>
         <div class="header-actions">
-          <a-button type="primary" @click="handleLogin">登录</a-button>
+          <template v-if="isLoggedIn">
+            <a-dropdown>
+              <a-button>
+                <UserOutlined />
+                {{ loginUserStore.loginUser?.username }}
+              </a-button>
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item key="profile">个人中心</a-menu-item>
+                  <a-menu-item key="settings">设置</a-menu-item>
+                  <a-menu-divider />
+                  <a-menu-item key="logout" @click="handleLogout">退出登录</a-menu-item>
+                </a-menu>
+              </template>
+            </a-dropdown>
+          </template>
+          <template v-else>
+            <a-button type="primary" @click="handleLogin">登录</a-button>
+          </template>
         </div>
       </div>
     </header>

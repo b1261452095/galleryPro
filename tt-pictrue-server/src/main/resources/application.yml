@@ -8,7 +8,7 @@ spring:
     name: picture-server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://14.103.206.253:3306/b_picture
+    url: jdbc:mysql://14.103.206.253:3306/tt_picture
     name: root
     password: b12614520952
 
@@ -32,7 +32,7 @@ mybatis-plus:
 knife4j:
   enable: true
   openapi:
-    title: 智能云图库api文档
+    title: 智能云图库api
     description: ""
     email: longaotian0304@gmail.com
     concat: 龙傲天
@@ -43,7 +43,7 @@ knife4j:
     terms-of-service-url: https://stackoverflow.com/
     group:
       default:
-        group-name: 默认分组
+        group-name: default
         api-rule: package
         api-rule-resources:
           - com.tt.ttpictrueserver.controller
