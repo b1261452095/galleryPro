@@ -9,6 +9,9 @@ export interface LoginUser {
   token: string
 }
 
+/**
+ * 存储登录信息的状态
+ */
 export const useLoginUserStore = defineStore('loginUser', () => {
   const loginUser = ref<LoginUser | null>(null)
 
