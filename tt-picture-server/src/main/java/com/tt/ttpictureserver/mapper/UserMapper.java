@@ -1,6 +1,6 @@
 package com.tt.ttpictureserver.mapper;
 
-import com.tt.ttpictureserver.model.user.domain.User;
+import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
