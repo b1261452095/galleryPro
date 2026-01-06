@@ -1,6 +1,7 @@
 package com.tt.ttpictureserver.model.user.service;
 
 import com.tt.ttpictureserver.common.BaseResponse;
+import com.tt.ttpictureserver.model.user.domain.dto.UserRegisterRequest;
 import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,10 +14,10 @@ public interface UserService extends IService<User> {
 
      /**
       * 用户注册
-      * 
-      * @param userName
-      * @return
+      * @description ${}
+      * @param userRegisterRequest
+      * @return BaseResponse<String>
       */
-     BaseResponse<String> userRegister(String userName, String password, String surePassword);
+     BaseResponse<String> userRegister(UserRegisterRequest userRegisterRequest);
 
 }

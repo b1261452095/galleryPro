@@ -3,6 +3,7 @@ package com.tt.ttpictureserver.model.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tt.ttpictureserver.common.BaseResponse;
+import com.tt.ttpictureserver.model.user.domain.dto.UserRegisterRequest;
 import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.tt.ttpictureserver.model.user.service.UserService;
 import com.tt.ttpictureserver.mapper.UserMapper;
@@ -25,8 +26,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private static final String SALT = "tt_picture";
 
     @Override
-    public BaseResponse<String> userRegister(String userAccount, String password, String surePassword) {
+    public BaseResponse<String> userRegister(UserRegisterRequest userRegisterRequest) {
         // 1. 参数校验
+        String userAccount = userRegisterRequest.getUserAccount();
+        String password = userRegisterRequest.getPassword();
+        String surePassword = userRegisterRequest.getSurePassword();
+
+
         if (userAccount == null || userAccount.trim().isEmpty()) {
             return BaseResponse.error(40000, "账号不能为空");
         }
@@ -75,10 +81,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         // 9. 创建用户
         User user = new User();
-        user.setUseraccount(userAccount);
-        user.setUserpassword(encryptedPassword);
-        user.setUsername("用户_" + userAccount); // 默认昵称
-        user.setUserrole("user"); // 默认角色
+        user.setUserAccount(userAccount);
+        user.setUserPassword(encryptedPassword);
+        user.setUserName("用户_" + userAccount); // 默认昵称
+        user.setUserRole("user"); // 默认角色
 
         // 10. 保存到数据库
         boolean saveResult = this.save(user);

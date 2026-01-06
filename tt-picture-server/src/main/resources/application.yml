@@ -8,15 +8,15 @@ spring:
     name: picture-server
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://14.103.206.253:3306/tt_picture
-    name: root
-    password: b12614520952
+    url: jdbc:mysql://14.103.206.253:3306/tt_pictures
+    username: root
+    password: b1261452095
 
 mybatis-plus:
   configuration:
     # MyBatis 配置
     #开启自动驼峰命名规则（camel case）映射，即从经典数据库列名 A_COLUMN（下划线命名） 到经典 Java 属性名 aColumn（驼峰命名） 的类似映射。
-    map-underscore-to-camel-case: true
+    map-underscore-to-camel-case: false
     #仅在开发环境打印日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
@@ -27,7 +27,6 @@ mybatis-plus:
       logic-delete-field: isDelete
       logic-delete-value: 1
       logic-not-delete-value: 0
-
 
 knife4j:
   enable: true
@@ -46,4 +45,4 @@ knife4j:
         group-name: default
         api-rule: package
         api-rule-resources:
-          - com.tt.ttpictrueserver.controller
+          - com.tt.ttpictureserver

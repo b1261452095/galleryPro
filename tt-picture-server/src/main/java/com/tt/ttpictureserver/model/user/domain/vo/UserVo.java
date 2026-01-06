@@ -1,18 +1,18 @@
 package com.tt.ttpictureserver.model.user.domain.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 用户
- * @TableName user
+ * 用户视图对象（脱敏）
  */
 @Data
-public class UserVo {
+public class UserVo implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * id
      */
@@ -21,41 +21,30 @@ public class UserVo {
     /**
      * 账号
      */
-    private String useraccount;
-
+    private String userAccount;
 
     /**
      * 用户昵称
      */
-    private String username;
+    private String userName;
 
     /**
      * 用户头像
      */
-    private String useravatar;
+    private String userAvatar;
 
     /**
      * 用户简介
      */
-    private String userprofile;
+    private String userProfile;
 
     /**
      * 用户角色: user/admin
      */
-    private String userrole;
-
-    /**
-     * 编辑时间
-     */
-    private Date edittime;
+    private String userRole;
 
     /**
      * 创建时间
      */
-    private Date createtime;
-
-    /**
-     * 更新时间
-     */
-    private Date updatetime;
+    private Date createTime;
 }
