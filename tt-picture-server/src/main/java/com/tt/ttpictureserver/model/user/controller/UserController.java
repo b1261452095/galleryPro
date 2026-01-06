@@ -30,7 +30,7 @@ public class UserController {
 
     @PostMapping("/register")
     @ApiOperation("用户注册")
-    public BaseResponse<String> Register(UserRegisterRequest userRegisterRequest) {
+    public BaseResponse<String> Register(@RequestBody  UserRegisterRequest userRegisterRequest) {
         return userService.userRegister(userRegisterRequest);
     }
 

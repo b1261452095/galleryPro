@@ -1,9 +1,10 @@
 // @ts-ignore
 /* eslint-disable */
 // API 更新时间：
-//  API 唯一标识：
-
+// API 唯一标识：
 import * as basicController from './basicController'
+import * as userManage from './userManage'
 export default {
   basicController,
+  userManage,
 }
