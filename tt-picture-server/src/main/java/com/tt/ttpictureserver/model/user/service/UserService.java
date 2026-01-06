@@ -1,9 +1,15 @@
 package com.tt.ttpictureserver.model.user.service;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tt.ttpictureserver.common.BaseResponse;
+import com.tt.ttpictureserver.model.user.domain.dto.UserLoginRequest;
 import com.tt.ttpictureserver.model.user.domain.dto.UserRegisterRequest;
 import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.tt.ttpictureserver.model.user.domain.vo.LoginUserVo;
+import org.springframework.beans.BeanUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author bianhongbin
@@ -14,10 +20,36 @@ public interface UserService extends IService<User> {
 
      /**
       * 用户注册
-      * @description ${}
+      * 
       * @param userRegisterRequest
       * @return BaseResponse<String>
       */
      BaseResponse<String> userRegister(UserRegisterRequest userRegisterRequest);
 
+     /**
+      * 用户登录
+      * @param userAccount
+      * @param password
+      * @param request
+      * @return BaseResponse<LoginUserVo>
+      */
+     LoginUserVo userLogin(String userAccount, String password, HttpServletRequest request);
+
+
+     /**
+      * 获取当前登录用户
+      * @param request
+      * @return User
+      */
+     User getLoginUser(HttpServletRequest request);
+
+     /**
+      * 用户数据脱敏
+      * @param User
+      * @return LoginUserVo
+      */
+     LoginUserVo  getLoginUserVo(User User);
+
+
+     String getEncryptPassword(String password);
 }

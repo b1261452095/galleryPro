@@ -1,16 +1,25 @@
 package com.tt.ttpictureserver.model.user.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tt.ttpictureserver.common.BaseResponse;
+import com.tt.ttpictureserver.exception.BusinessException;
+import com.tt.ttpictureserver.exception.ErrorCode;
+import com.tt.ttpictureserver.model.user.domain.dto.UserLoginRequest;
 import com.tt.ttpictureserver.model.user.domain.dto.UserRegisterRequest;
 import com.tt.ttpictureserver.model.user.domain.entity.User;
+import com.tt.ttpictureserver.model.user.domain.vo.LoginUserVo;
 import com.tt.ttpictureserver.model.user.service.UserService;
 import com.tt.ttpictureserver.mapper.UserMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+
+import static com.tt.ttpictureserver.constant.userConstant.USER_LOGIN_STATE;
 
 /**
  * @author bianhongbin
@@ -31,7 +40,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String userAccount = userRegisterRequest.getUserAccount();
         String password = userRegisterRequest.getPassword();
         String surePassword = userRegisterRequest.getSurePassword();
-
 
         if (userAccount == null || userAccount.trim().isEmpty()) {
             return BaseResponse.error(40000, "账号不能为空");
@@ -77,7 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
 
         // 8. 密码加密（MD5 + 盐值）
-        String encryptedPassword = DigestUtils.md5DigestAsHex((SALT + password).getBytes(StandardCharsets.UTF_8));
+        String encryptedPassword = getEncryptPassword(password);
 
         // 9. 创建用户
         User user = new User();
@@ -94,5 +102,61 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         return BaseResponse.success("注册成功");
     }
+
+    @Override
+    public LoginUserVo userLogin(String userAccount, String password, HttpServletRequest request) {
+       //校验
+        if (StrUtil.isEmpty(userAccount) || StrUtil.isEmpty(password)) {
+           throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数为空");
+       }
+        //加密
+        String encryptedPassword = getEncryptPassword(password);
+        //查询用户是否存在
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("userAccount", userAccount);
+        queryWrapper.eq("userPassword", encryptedPassword);
+        User user = this.baseMapper.selectOne(queryWrapper);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户不存在或密码错误");
+        }
+        //记住用户的状态
+        request.getSession().setAttribute(USER_LOGIN_STATE,user);
+        return this.getLoginUserVo(user);
+    }
+
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        //先判断是否已登录
+        Object userObj  = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+
+        //从数据库查询（可注释）
+        long userId = currentUser.getId();
+        currentUser = this.getById(userId);
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        return currentUser;
+    }
+
+    @Override
+    public LoginUserVo getLoginUserVo(User user){
+        if(user == null){
+            return null;
+        }
+        LoginUserVo loginUserVo = new LoginUserVo();
+        BeanUtils.copyProperties(user,loginUserVo);
+        return loginUserVo;
+    }
+
+    @Override
+    public String getEncryptPassword(String password) {
+        final String SALT = "tt_picture";
+        return DigestUtils.md5DigestAsHex((SALT + password).getBytes(StandardCharsets.UTF_8));
+    }
+
 
 }
