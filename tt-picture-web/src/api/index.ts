@@ -3,8 +3,8 @@
 // API 更新时间：
 // API 唯一标识：
 import * as basicController from './basicController'
-import * as userManage from './userManage'
+import * as yonghuguanli from './yonghuguanli'
 export default {
   basicController,
-  userManage,
+  yonghuguanli,
 }

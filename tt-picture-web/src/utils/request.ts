@@ -5,6 +5,7 @@ import { message } from 'ant-design-vue'
 const service: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || '/api',
   timeout: 15000,
+  withCredentials: true, // 关键：允许跨域请求携带 Cookie
   headers: {
     'Content-Type': 'application/json',
   },
@@ -75,30 +76,50 @@ service.interceptors.response.use(
   },
 )
 
-// 通用请求方法
+// 通用请求方法 - 支持两种调用方式
 export interface RequestConfig extends AxiosRequestConfig {
   showError?: boolean // 是否显示错误提示
 }
 
-export const request = <T = any>(config: RequestConfig): Promise<T> => {
-  return service.request<any, T>(config)
+// 函数重载声明
+function request<T = unknown>(config: RequestConfig): Promise<T>
+function request<T = unknown>(url: string, config?: RequestConfig): Promise<T>
+function request<T = unknown>(
+  urlOrConfig: string | RequestConfig,
+  config?: RequestConfig,
+): Promise<T> {
+  if (typeof urlOrConfig === 'string') {
+    return service.request<unknown, T>({ ...config, url: urlOrConfig })
+  }
+  return service.request<unknown, T>(urlOrConfig)
 }
 
+export { request }
+
 // 便捷方法
-export const get = <T = any>(url: string, config?: RequestConfig): Promise<T> => {
+export const get = <T = unknown>(url: string, config?: RequestConfig): Promise<T> => {
   return request<T>({ ...config, method: 'GET', url })
 }
 
-export const post = <T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> => {
+export const post = <T = unknown>(
+  url: string,
+  data?: unknown,
+  config?: RequestConfig,
+): Promise<T> => {
   return request<T>({ ...config, method: 'POST', url, data })
 }
 
-export const put = <T = any>(url: string, data?: any, config?: RequestConfig): Promise<T> => {
+export const put = <T = unknown>(
+  url: string,
+  data?: unknown,
+  config?: RequestConfig,
+): Promise<T> => {
   return request<T>({ ...config, method: 'PUT', url, data })
 }
 
-export const del = <T = any>(url: string, config?: RequestConfig): Promise<T> => {
+export const del = <T = unknown>(url: string, config?: RequestConfig): Promise<T> => {
   return request<T>({ ...config, method: 'DELETE', url })
 }
 
-export default service
+// 默认导出封装后的 request 函数
+export default request

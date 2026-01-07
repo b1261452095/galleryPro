@@ -1,6 +1,5 @@
 package com.tt.ttpictureserver.model.user.domain.dto;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -14,19 +13,32 @@ import java.io.Serializable;
  * @date 2026-01-06 15:28
  */
 @Data
-public class UserLoginRequest implements Serializable {
+public class UserAddRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
+     * 用户昵称
+     */
+    private String userName;
+
+    /**
      * 账号
      */
-    @ApiModelProperty(value = "账号", required = true, example = "admin")
     private String userAccount;
 
     /**
-     * 密码
+     * 用户头像
      */
-    @ApiModelProperty(value = "密码", required = true, example = "admin123456")
-    private String password;
+    private String userAvatar;
+
+    /**
+     * 简介
+     */
+    private String userProfile;
+
+    /**
+     * 用户角色 user admin
+     */
+    private String userRole;
 }

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { getLoginUserInfoUsingGet } from '@/api/yonghuguanli'
 
 export interface LoginUser {
   id: string
@@ -46,11 +47,24 @@ export const useLoginUserStore = defineStore('loginUser', () => {
     }
   }
 
+  // 从后端获取登录用户信息
+  const fetchLoginUser = async () => {
+    try {
+      const res = await getLoginUserInfoUsingGet()
+      if (res.code === 0 && res.data) {
+        setLoginUser(res.data as LoginUser)
+      }
+    } catch {
+      // 获取失败，可能是未登录状态
+    }
+  }
+
   return {
     loginUser,
     isLoggedIn,
     setLoginUser,
     clearLoginUser,
     restoreLoginUser,
+    fetchLoginUser,
   }
 })

@@ -11,6 +11,7 @@ const currentYear = new Date().getFullYear()
 
 const navItems = [
   { path: '/', label: '首页' },
+  { path: '/admin/user', label: '用户管理' },
   { path: '/gallery', label: '图库' },
   { path: '/upload', label: '上传' },
   { path: '/about', label: '关于' },
@@ -27,8 +28,7 @@ const navigateTo = (path: string) => {
 const isLoggedIn = computed(() => loginUserStore.isLoggedIn)
 
 const handleLogin = () => {
-  // TODO: 打开登录弹窗或跳转到登录页
-  console.log('点击登录')
+  router.push('/user/login')
 }
 
 const handleLogout = () => {

@@ -14,7 +14,6 @@ import java.io.Serializable;
  * @date 2026-01-06 15:28
  */
 @Data
-@ApiModel("用户注册请求参数")
 public class UserRegisterRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
