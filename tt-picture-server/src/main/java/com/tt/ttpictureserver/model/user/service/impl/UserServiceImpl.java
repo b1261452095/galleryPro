@@ -1,5 +1,6 @@
 package com.tt.ttpictureserver.model.user.service.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -7,6 +8,7 @@ import com.tt.ttpictureserver.common.BaseResponse;
 import com.tt.ttpictureserver.exception.BusinessException;
 import com.tt.ttpictureserver.exception.ErrorCode;
 import com.tt.ttpictureserver.model.user.domain.dto.UserLoginRequest;
+import com.tt.ttpictureserver.model.user.domain.dto.UserQueryRequest;
 import com.tt.ttpictureserver.model.user.domain.dto.UserRegisterRequest;
 import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.tt.ttpictureserver.model.user.domain.vo.LoginUserVo;
@@ -156,6 +158,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public String getEncryptPassword(String password) {
         final String SALT = "tt_picture";
         return DigestUtils.md5DigestAsHex((SALT + password).getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Override
+    public QueryWrapper<User> getQueryRequest(UserQueryRequest userQueryRequest) {
+        if (userQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Long id = userQueryRequest.getId();
+        String userName = userQueryRequest.getUserName();
+        String userAvatar = userQueryRequest.getUserAvatar();
+        String userProfile = userQueryRequest.getUserProfile();
+        String userRole = userQueryRequest.getUserRole();
+        int current = userQueryRequest.getCurrent();
+        int pageSize = userQueryRequest.getPageSize();
+        String sortField = userQueryRequest.getSortField();
+        String sortOrder = userQueryRequest.getSortOrder();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(ObjUtil.isNotNull(id),"id", id);
+        queryWrapper.like(StrUtil.isNotBlank(userName),"user_name", userName);
+        queryWrapper.like(StrUtil.isNotBlank(userAvatar),"user_avatar", userAvatar);
+        queryWrapper.like(StrUtil.isNotBlank(userProfile),"user_profile", userProfile);
+        queryWrapper.eq(StrUtil.isNotBlank(userRole),"user_role", userRole);
+        queryWrapper.orderBy(StrUtil.isNotEmpty(sortField), sortOrder.equals("asc"), sortField);
+        return  queryWrapper;
     }
 
 

@@ -1,5 +1,6 @@
 package com.tt.ttpictureserver.model.user.domain.dto;
 
+import com.tt.ttpictureserver.common.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

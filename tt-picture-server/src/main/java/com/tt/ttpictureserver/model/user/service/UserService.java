@@ -1,8 +1,10 @@
 package com.tt.ttpictureserver.model.user.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tt.ttpictureserver.common.BaseResponse;
 import com.tt.ttpictureserver.model.user.domain.dto.UserLoginRequest;
+import com.tt.ttpictureserver.model.user.domain.dto.UserQueryRequest;
 import com.tt.ttpictureserver.model.user.domain.dto.UserRegisterRequest;
 import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -50,6 +52,20 @@ public interface UserService extends IService<User> {
       */
      LoginUserVo  getLoginUserVo(User User);
 
-
+     /**
+      * 密码加盐
+      *
+      * @param password
+      * @return String
+      */
      String getEncryptPassword(String password);
+
+
+     /**
+      * 用户列表查询
+      *
+      * @param userQueryRequest
+      * @return QueryWrapper<User>
+      */
+     QueryWrapper<User> getQueryRequest(UserQueryRequest userQueryRequest);
 }
