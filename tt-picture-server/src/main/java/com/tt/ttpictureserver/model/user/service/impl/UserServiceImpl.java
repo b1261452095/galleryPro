@@ -1,17 +1,20 @@
 package com.tt.ttpictureserver.model.user.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tt.ttpictureserver.common.BaseResponse;
+import com.tt.ttpictureserver.common.DeleteRequest;
 import com.tt.ttpictureserver.exception.BusinessException;
 import com.tt.ttpictureserver.exception.ErrorCode;
-import com.tt.ttpictureserver.model.user.domain.dto.UserLoginRequest;
-import com.tt.ttpictureserver.model.user.domain.dto.UserQueryRequest;
-import com.tt.ttpictureserver.model.user.domain.dto.UserRegisterRequest;
+import com.tt.ttpictureserver.exception.ThrowUtils;
+import com.tt.ttpictureserver.model.user.domain.dto.*;
 import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.tt.ttpictureserver.model.user.domain.vo.LoginUserVo;
+import com.tt.ttpictureserver.model.user.domain.vo.UserVo;
 import com.tt.ttpictureserver.model.user.service.UserService;
 import com.tt.ttpictureserver.mapper.UserMapper;
 import org.springframework.beans.BeanUtils;
@@ -20,6 +23,9 @@ import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.tt.ttpictureserver.constant.userConstant.USER_LOGIN_STATE;
 
@@ -170,8 +176,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String userAvatar = userQueryRequest.getUserAvatar();
         String userProfile = userQueryRequest.getUserProfile();
         String userRole = userQueryRequest.getUserRole();
-        int current = userQueryRequest.getCurrent();
-        int pageSize = userQueryRequest.getPageSize();
         String sortField = userQueryRequest.getSortField();
         String sortOrder = userQueryRequest.getSortOrder();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -180,8 +184,64 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.like(StrUtil.isNotBlank(userAvatar),"user_avatar", userAvatar);
         queryWrapper.like(StrUtil.isNotBlank(userProfile),"user_profile", userProfile);
         queryWrapper.eq(StrUtil.isNotBlank(userRole),"user_role", userRole);
-        queryWrapper.orderBy(StrUtil.isNotEmpty(sortField), sortOrder.equals("asc"), sortField);
+        // 只有当 sortField 不为空时才添加排序
+        if (StrUtil.isNotBlank(sortField)) {
+            queryWrapper.orderBy(true, "asc".equals(sortOrder), sortField);
+        }
         return  queryWrapper;
+    }
+
+    @Override
+    public BaseResponse<Long> addUser(UserAddRequest userAddRequest) {
+        ThrowUtils.throwIf(userAddRequest == null, ErrorCode.PARAMS_ERROR);
+        User user = new User();
+        BeanUtils.copyProperties(userAddRequest,user);
+        final String DEFAULT_PASSWORD = "12345678";
+        String encryptPassword = getEncryptPassword(DEFAULT_PASSWORD);
+        user.setUserPassword(encryptPassword);
+        boolean saveResult = this.save(user);
+        ThrowUtils.throwIf(saveResult, ErrorCode.SUCCESS);
+        return BaseResponse.success(user.getId());
+    }
+
+
+    @Override
+    public BaseResponse<Boolean> deleteUser(DeleteRequest deleteRequest) {
+        if (deleteRequest == null || deleteRequest.getId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        boolean b = this.removeById(deleteRequest.getId());
+        return BaseResponse.success(b);
+    }
+
+    @Override
+    public BaseResponse<Boolean> updateUser(UserUpdateRequest userUpdateRequest) {
+        if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User user = new User();
+        BeanUtils.copyProperties(userUpdateRequest,user);
+        boolean saveResult = this.updateById(user);
+        ThrowUtils.throwIf(!saveResult,ErrorCode.OPERATION_ERROR);
+        return BaseResponse.success(true);
+    }
+
+    @Override
+    public UserVo getUserVo(User user) {
+        if(user == null){
+            return null;
+        }
+        UserVo userVo = new UserVo();
+        BeanUtils.copyProperties(user,userVo);
+        return userVo;
+    }
+
+    @Override
+    public List<UserVo> getUserVoList(List<User> userList) {
+        if (CollUtil.isEmpty(userList)){
+            return new ArrayList<>();
+        };
+        return userList.stream().map(this::getUserVo).collect(Collectors.toList());
     }
 
 

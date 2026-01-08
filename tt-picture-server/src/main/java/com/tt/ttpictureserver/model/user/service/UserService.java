@@ -3,15 +3,16 @@ package com.tt.ttpictureserver.model.user.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tt.ttpictureserver.common.BaseResponse;
-import com.tt.ttpictureserver.model.user.domain.dto.UserLoginRequest;
-import com.tt.ttpictureserver.model.user.domain.dto.UserQueryRequest;
-import com.tt.ttpictureserver.model.user.domain.dto.UserRegisterRequest;
+import com.tt.ttpictureserver.common.DeleteRequest;
+import com.tt.ttpictureserver.model.user.domain.dto.*;
 import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tt.ttpictureserver.model.user.domain.vo.LoginUserVo;
+import com.tt.ttpictureserver.model.user.domain.vo.UserVo;
 import org.springframework.beans.BeanUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author bianhongbin
@@ -68,4 +69,41 @@ public interface UserService extends IService<User> {
       * @return QueryWrapper<User>
       */
      QueryWrapper<User> getQueryRequest(UserQueryRequest userQueryRequest);
+
+
+     /**
+      * 用户新增
+      * @param userAddRequest
+      * @return BaseResponse<Long>
+      */
+     BaseResponse<Long> addUser(UserAddRequest userAddRequest);
+
+     /**
+      * 用户删除
+      * @param deleteRequest
+      * @return BaseResponse<Boolean>
+      */
+     BaseResponse<Boolean> deleteUser(DeleteRequest deleteRequest);
+
+     /**
+      * 用户修修改
+      * @param userUpdateRequest
+      * @return BaseResponse<Boolean>
+      */
+     BaseResponse<Boolean> updateUser(UserUpdateRequest userUpdateRequest);
+
+     /**
+      * 获取单个脱敏的用户信息
+      * @param user
+      * @return UserVo
+      */
+     public UserVo getUserVo(User user);
+
+     /**
+      * 获取用户列表(脱敏)
+      * @param userList
+      * @return UserVo
+      */
+     public List<UserVo> getUserVoList(List<User> userList);
+
 }

@@ -11,6 +11,10 @@ spring:
     url: jdbc:mysql://14.103.206.253:3306/tt_pictures
     username: root
     password: b1261452095
+  # Jackson 时间格式化配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
 mybatis-plus:
   configuration:
@@ -19,6 +23,8 @@ mybatis-plus:
     map-underscore-to-camel-case: false
     #仅在开发环境打印日志
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  # 指定 Mapper XML 文件位置（标准位置）
+  mapper-locations: classpath:mapper/*.xml
   global-config:
     # 全局配置
     db-config:

@@ -8,7 +8,7 @@ export async function helloUsingGet(
   params: API.helloUsingGETParams,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponse>('/api/hello222245', {
+  return request<API.BaseResponseObject_>('/api/hello222245', {
     method: 'GET',
     params: {
       ...params,
