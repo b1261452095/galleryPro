@@ -33,7 +33,7 @@ const router = createRouter({
           path: 'admin/user',
           name: 'admin_user',
           component: () => import('../views/admin/UserManagePage.vue'),
-          meta: { requiresAuth: true }, // 需要登录
+          meta: { requiresAuth: true, requiresAdmin: true }, // 需要登录且需要管理员权限
         },
       ],
     },
@@ -64,9 +64,17 @@ router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth && !loginUserStore.isLoggedIn) {
     // 跳转到登录页，并记录原目标页面
     next({ name: 'user_login', query: { redirect: to.fullPath } })
-  } else {
-    next()
+    return
   }
+
+  // 如果页面需要管理员权限且用户不是管理员
+  if (to.meta.requiresAdmin && !loginUserStore.isAdmin) {
+    // 跳转到首页，提示无权限
+    next({ name: 'home' })
+    return
+  }
+
+  next()
 })
 
 export default router

@@ -6,6 +6,9 @@ server:
 spring:
   application:
     name: picture-server
+  # 激活 local 配置文件
+  profiles:
+    active: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://14.103.206.253:3306/tt_pictures

@@ -9,13 +9,23 @@ const route = useRoute()
 const loginUserStore = useLoginUserStore()
 const currentYear = new Date().getFullYear()
 
-const navItems = [
-  { path: '/', label: '首页' },
-  { path: '/admin/user', label: '用户管理' },
-  { path: '/gallery', label: '图库' },
-  { path: '/upload', label: '上传' },
-  { path: '/about', label: '关于' },
-]
+// 根据用户权限动态生成导航菜单
+const navItems = computed(() => {
+  const items = [{ path: '/', label: '首页' }]
+
+  // 只有管理员才能看到用户管理菜单
+  if (loginUserStore.isAdmin) {
+    items.push({ path: '/admin/user', label: '用户管理' })
+  }
+
+  items.push(
+    { path: '/gallery', label: '图库' },
+    { path: '/upload', label: '上传' },
+    { path: '/about', label: '关于' },
+  )
+
+  return items
+})
 
 const isActive = (path: string) => {
   return route.path === path

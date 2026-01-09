@@ -8,6 +8,7 @@ export interface LoginUser {
   email?: string
   avatar?: string
   token: string
+  userRole?: string // 用户角色：admin 或 user
 }
 
 /**
@@ -18,6 +19,9 @@ export const useLoginUserStore = defineStore('loginUser', () => {
 
   // 计算属性：是否已登录
   const isLoggedIn = computed(() => !!loginUser.value)
+
+  // 计算属性：是否是管理员
+  const isAdmin = computed(() => loginUser.value?.userRole === 'admin')
 
   // 设置登录用户信息
   const setLoginUser = (user: LoginUser) => {
@@ -52,7 +56,17 @@ export const useLoginUserStore = defineStore('loginUser', () => {
     try {
       const res = await getLoginUserInfoUsingGet()
       if (res.code === 0 && res.data) {
-        setLoginUser(res.data as LoginUser)
+        const userData = res.data as API.LoginUserVo
+        // 将后端数据转换为前端 LoginUser 格式
+        const user: LoginUser = {
+          id: String(userData.id || ''),
+          username: userData.userName || userData.userAccount || '',
+          email: '',
+          avatar: userData.userAvatar,
+          token: localStorage.getItem('token') || '',
+          userRole: userData.userRole,
+        }
+        setLoginUser(user)
       }
     } catch {
       // 获取失败，可能是未登录状态
@@ -62,6 +76,7 @@ export const useLoginUserStore = defineStore('loginUser', () => {
   return {
     loginUser,
     isLoggedIn,
+    isAdmin,
     setLoginUser,
     clearLoginUser,
     restoreLoginUser,
