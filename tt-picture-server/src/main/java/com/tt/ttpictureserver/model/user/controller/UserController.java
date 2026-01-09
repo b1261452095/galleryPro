@@ -1,7 +1,9 @@
 package com.tt.ttpictureserver.model.user.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.tt.ttpictureserver.annotation.AuthCheck;
 import com.tt.ttpictureserver.common.BaseResponse;
 import com.tt.ttpictureserver.common.DeleteRequest;
+import com.tt.ttpictureserver.constant.userConstant;
 import com.tt.ttpictureserver.exception.ErrorCode;
 import com.tt.ttpictureserver.exception.ThrowUtils;
 import com.tt.ttpictureserver.model.user.domain.dto.*;
@@ -56,26 +58,30 @@ public class UserController {
         return BaseResponse.success(userService.getLoginUserVo(user));
     }
 
-    @ApiOperation("新增用户")
+    @ApiOperation("新增用户（仅管理员）")
     @PostMapping("/add")
+    @AuthCheck(mustRole = userConstant.ADMIN_ROLE)  // 👈 只有管理员可以新增用户
     public BaseResponse<Long> addUser(UserAddRequest userAddRequest) {
         return userService.addUser(userAddRequest);
     }
 
-    @ApiOperation("删除用户")
+    @ApiOperation("删除用户（仅管理员）")
     @DeleteMapping("/delete")
+    @AuthCheck(mustRole = userConstant.ADMIN_ROLE)  // 👈 只有管理员可以删除用户
     public BaseResponse<Boolean> deleteUser(DeleteRequest deleteRequest){
         return userService.deleteUser(deleteRequest);
     }
 
-    @ApiOperation("更新用户")
+    @ApiOperation("更新用户（仅管理员）")
     @PutMapping("/update")
+    @AuthCheck(mustRole = userConstant.ADMIN_ROLE)  // 👈 只有管理员可以更新用户
     public BaseResponse<Boolean> updateUser(UserUpdateRequest userUpdateRequest){
         return userService.updateUser(userUpdateRequest);
     }
 
-    @ApiOperation("获取用户列表")
+    @ApiOperation("获取用户列表（仅管理员）")
     @PostMapping("/list")
+    @AuthCheck(mustRole = userConstant.ADMIN_ROLE)  // 👈 只有管理员可以查看用户列表
     public BaseResponse<Page<UserVo>> getUserList(@RequestBody UserQueryRequest userQueryRequest){
         ThrowUtils.throwIf(userQueryRequest == null, ErrorCode.PARAMS_ERROR);
         long current = userQueryRequest.getCurrent();
