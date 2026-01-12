@@ -13,6 +13,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 /**
  * @author NoBug
  * @version 1.0
@@ -50,6 +52,16 @@ public class CosClientConfig {
      * bucket 名称
      */
     private String bucket;
+
+    /**
+     * 上传文件的最大值
+     */
+    private Long maxSize;
+
+    /**
+     * 允许的文件后缀
+     */
+    private List<String> suffixList;
 
 
 

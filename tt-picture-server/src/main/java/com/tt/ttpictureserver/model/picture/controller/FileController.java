@@ -1,6 +1,5 @@
-package com.tt.ttpictureserver.controller;
+package com.tt.ttpictureserver.model.picture.controller;
 
-import com.qcloud.cos.COS;
 import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
 import com.qcloud.cos.utils.IOUtils;
@@ -8,6 +7,12 @@ import com.tt.ttpictureserver.common.BaseResponse;
 import com.tt.ttpictureserver.exception.BusinessException;
 import com.tt.ttpictureserver.exception.ErrorCode;
 import com.tt.ttpictureserver.manager.CosManager;
+import com.tt.ttpictureserver.model.picture.domain.dto.PictureUploadRequest;
+import com.tt.ttpictureserver.model.picture.domain.dto.UploadPictureResult;
+import com.tt.ttpictureserver.model.picture.domain.vo.PictureVo;
+import com.tt.ttpictureserver.model.picture.service.PictureService;
+import com.tt.ttpictureserver.model.user.domain.entity.User;
+import com.tt.ttpictureserver.model.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
@@ -34,9 +40,13 @@ import java.io.IOException;
 public class FileController {
 
     private final CosManager cosManager;
+    private final UserService userService;
+    private final PictureService pictureService;
 
-    public FileController(CosManager cosManager) {
+    public FileController(CosManager cosManager, UserService userService, PictureService pictureService) {
         this.cosManager = cosManager;
+        this.userService = userService;
+        this.pictureService = pictureService;
     }
 
     @ApiOperation(value = "测试上传文件")
@@ -87,4 +97,15 @@ public class FileController {
             }
         }
     }
+
+    public BaseResponse<PictureVo> uploadPicture(
+            @RequestParam("file") MultipartFile multipartFile,
+            PictureUploadRequest pictureUploadRequest,
+            HttpServletRequest request
+    ) {
+        User loginUser = userService.getLoginUser(request);
+        PictureVo pictureVo = pictureService.uploadPicture(multipartFile, pictureUploadRequest, loginUser);
+        return BaseResponse.success(pictureVo);
+    }
+
 }

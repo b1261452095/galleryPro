@@ -1,4 +1,4 @@
-package com.tt.ttpictureserver.model.picture.mapper;
+package com.tt.ttpictureserver.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tt.ttpictureserver.model.picture.domain.entity.Picture;

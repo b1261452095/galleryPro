@@ -7,7 +7,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @SpringBootApplication
 @MapperScan("com.tt.ttpictureserver.mapper")
-@EnableAspectJAutoProxy(exposeProxy = true)  //代理
+@EnableAspectJAutoProxy(exposeProxy = true) // 代理
 public class TtPictrueServerApplication {
 
     public static void main(String[] args) {
