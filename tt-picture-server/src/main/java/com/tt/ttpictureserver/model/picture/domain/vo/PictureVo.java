@@ -1,9 +1,12 @@
 package com.tt.ttpictureserver.model.picture.domain.vo;
 
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.tt.ttpictureserver.model.picture.domain.entity.Picture;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -98,4 +101,36 @@ public class PictureVo implements Serializable {
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
+
+    /**
+     * 封装转对象
+     * @param pictureVo
+     * @return Picture
+     */
+    public static Picture voToObj(PictureVo pictureVo) {
+        if (pictureVo == null) {
+            return null;
+        }
+        Picture picture = new Picture();
+        BeanUtils.copyProperties(pictureVo, picture);
+        //类型不同，需要重新赋值
+        picture.setTags(JSONUtil.toJsonStr(pictureVo.getTags()));
+        return picture;
+    }
+
+    /**
+     * 对象转封装
+     * @param picture
+     * @return PictureVo
+     */
+    public static PictureVo objToVo(Picture picture) {
+        if (picture == null) {
+            return null;
+        }
+        PictureVo pictureVo = new PictureVo();
+        BeanUtils.copyProperties(picture, pictureVo);
+        //类型不同，需要重新赋值
+        pictureVo.setTags(JSONUtil.toList(picture.getTags(), String.class));
+        return pictureVo;
+    }
 }

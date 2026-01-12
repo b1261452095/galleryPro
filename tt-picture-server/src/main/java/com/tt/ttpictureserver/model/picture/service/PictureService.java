@@ -3,6 +3,7 @@ package com.tt.ttpictureserver.model.picture.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qcloud.cos.transfer.Upload;
 import com.tt.ttpictureserver.common.BaseResponse;
+import com.tt.ttpictureserver.model.picture.domain.dto.PictureUploadRequest;
 import com.tt.ttpictureserver.model.picture.domain.dto.UploadPictureResult;
 import com.tt.ttpictureserver.model.picture.domain.entity.Picture;
 import com.tt.ttpictureserver.model.picture.domain.vo.PictureVo;
@@ -18,5 +19,5 @@ import javax.servlet.http.HttpServletRequest;
 */
 public interface PictureService extends IService<Picture> {
 
-    public BaseResponse<PictureVo> uploadPicture(MultipartFile multipartFile, UploadPictureResult uploadPictureResult, User loginUser);
+    public PictureVo uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser);
 }

@@ -98,6 +98,8 @@ public class FileController {
         }
     }
 
+    @ApiOperation("上传图片（可重复）")
+    @PostMapping("/picture/upload")
     public BaseResponse<PictureVo> uploadPicture(
             @RequestParam("file") MultipartFile multipartFile,
             PictureUploadRequest pictureUploadRequest,

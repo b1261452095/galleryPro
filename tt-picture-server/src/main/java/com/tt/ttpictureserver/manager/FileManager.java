@@ -60,7 +60,7 @@ public class FileManager {
         return cosClient.putObject(putObjectRequest);
     }
 
-    public UploadPictureResult uploadPictureInfo(MultipartFile multipartFile, String uploadPathPrefix) {
+    public UploadPictureResult uploadPicture(MultipartFile multipartFile, String uploadPathPrefix) {
         // 校验图片
         validPicture(multipartFile);
         // 上传图片到cos
