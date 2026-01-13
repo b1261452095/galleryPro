@@ -31,9 +31,27 @@ declare namespace API {
     message?: string
   }
 
+  type BaseResponsePagePicture_ = {
+    code?: number
+    data?: PagePicture_
+    message?: string
+  }
+
+  type BaseResponsePagePictureVo_ = {
+    code?: number
+    data?: PagePictureVo_
+    message?: string
+  }
+
   type BaseResponsePageUserVo_ = {
     code?: number
     data?: PageUserVo_
+    message?: string
+  }
+
+  type BaseResponsePictureVo_ = {
+    code?: number
+    data?: PictureVo
     message?: string
   }
 
@@ -41,6 +59,11 @@ declare namespace API {
     code?: number
     data?: string
     message?: string
+  }
+
+  type deletePictureUsingDELETEParams = {
+    /** pictureId */
+    pictureId: number
   }
 
   type deleteUserUsingDELETEParams = {
@@ -62,6 +85,22 @@ declare namespace API {
     userRole?: string
   }
 
+  type PagePicture_ = {
+    current?: number
+    pages?: number
+    records?: Picture[]
+    size?: number
+    total?: number
+  }
+
+  type PagePictureVo_ = {
+    current?: number
+    pages?: number
+    records?: PictureVo[]
+    size?: number
+    total?: number
+  }
+
   type PageUserVo_ = {
     current?: number
     pages?: number
@@ -70,9 +109,70 @@ declare namespace API {
     total?: number
   }
 
+  type Picture = {
+    category?: string
+    createTime?: string
+    editTime?: string
+    id?: number
+    introduction?: string
+    isdelete?: number
+    name?: string
+    picFormat?: string
+    picHeight?: number
+    picScale?: number
+    picSize?: number
+    picWidth?: number
+    tags?: string
+    updateTime?: string
+    url?: string
+    userId?: number
+  }
+
+  type PictureQueryRequest = {
+    category?: string
+    current?: number
+    id?: number
+    introduction?: string
+    name?: string
+    pageSize?: number
+    picFormat?: string
+    picHeight?: number
+    picScale?: number
+    picSize?: number
+    picWidth?: number
+    sortField?: string
+    sortOrder?: string
+    tags?: string[]
+    userId?: number
+  }
+
+  type PictureVo = {
+    category?: string
+    createTime?: string
+    editTime?: string
+    id?: number
+    introduction?: string
+    name?: string
+    picFormat?: string
+    picHeight?: number
+    picScale?: number
+    picSize?: number
+    picWidth?: number
+    tags?: string[]
+    updateTime?: string
+    url?: string
+    user?: UserVo
+    userId?: number
+  }
+
   type test2UsingGETParams = {
     /** name */
     name: string
+  }
+
+  type testDownloadUsingGETParams = {
+    /** filepath */
+    filepath?: string
   }
 
   type testUsingGETParams = {
@@ -86,6 +186,10 @@ declare namespace API {
     userName?: string
     userProfile?: string
     userRole?: string
+  }
+
+  type uploadPictureUsingPOSTParams = {
+    id?: number
   }
 
   type UserLoginRequest = {

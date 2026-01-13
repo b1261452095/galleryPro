@@ -2,7 +2,7 @@
 /* eslint-disable */
 import request from '@/utils/request'
 
-/** 新增用户 POST /api/user/add */
+/** 新增用户（仅管理员） POST /api/user/add */
 export async function addUserUsingPost(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.addUserUsingPOSTParams,
@@ -17,7 +17,7 @@ export async function addUserUsingPost(
   })
 }
 
-/** 删除用户 DELETE /api/user/delete */
+/** 删除用户（仅管理员） DELETE /api/user/delete */
 export async function deleteUserUsingDelete(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.deleteUserUsingDELETEParams,
@@ -32,7 +32,7 @@ export async function deleteUserUsingDelete(
   })
 }
 
-/** 获取用户列表 POST /api/user/list */
+/** 获取用户列表（仅管理员） POST /api/user/list */
 export async function getUserListUsingPost(
   body: API.UserQueryRequest,
   options?: { [key: string]: any }
@@ -85,7 +85,7 @@ export async function registerUsingPost1(
   })
 }
 
-/** 更新用户 PUT /api/user/update */
+/** 更新用户（仅管理员） PUT /api/user/update */
 export async function updateUserUsingPut(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.updateUserUsingPUTParams,

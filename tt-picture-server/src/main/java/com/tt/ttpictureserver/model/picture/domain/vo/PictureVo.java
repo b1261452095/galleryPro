@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.tt.ttpictureserver.model.picture.domain.entity.Picture;
+import com.tt.ttpictureserver.model.user.domain.vo.UserVo;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
@@ -94,12 +95,10 @@ public class PictureVo implements Serializable {
     private Date updateTime;
 
     /**
-     * 是否删除
+     * 创建用户信息
      */
-    @TableLogic
-    private Integer isdelete;
+    private UserVo user;
 
-    @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
     /**

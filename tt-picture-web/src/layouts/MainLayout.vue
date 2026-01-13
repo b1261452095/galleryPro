@@ -19,7 +19,7 @@ const navItems = computed(() => {
   }
 
   items.push(
-    { path: '/gallery', label: '图库' },
+    { path: '/gallery', label: '图片管理' },
     { path: '/upload', label: '上传' },
     { path: '/about', label: '关于' },
   )
@@ -188,7 +188,7 @@ const handleLogout = () => {
 /* 主内容区域 */
 .main-content {
   flex: 1;
-  max-width: 1200px;
+  /* max-width: 1200px; */
   width: 100%;
   margin: 0 auto;
   padding: 24px 20px;

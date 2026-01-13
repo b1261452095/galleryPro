@@ -101,9 +101,15 @@ public interface UserService extends IService<User> {
 
      /**
       * 获取用户列表(脱敏)
-      * @param userList
+      * @param userList 用户列表
       * @return UserVo
       */
      public List<UserVo> getUserVoList(List<User> userList);
 
+     /**
+      * 是否为管理员
+      * @param user 用户
+      * @return boolean
+      */
+     public boolean isAdmin(User user);
 }

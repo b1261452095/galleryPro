@@ -3,11 +3,11 @@ package com.tt.ttpictureserver.model.user.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.log.Log;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.tt.ttpictureserver.common.BaseResponse;
 import com.tt.ttpictureserver.common.DeleteRequest;
+import com.tt.ttpictureserver.enums.UserRoleEnum;
 import com.tt.ttpictureserver.exception.BusinessException;
 import com.tt.ttpictureserver.exception.ErrorCode;
 import com.tt.ttpictureserver.exception.ThrowUtils;
@@ -242,6 +242,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             return new ArrayList<>();
         };
         return userList.stream().map(this::getUserVo).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isAdmin(User user) {
+        return user != null && UserRoleEnum.ADMIN.getCode().equals(user.getUserRole());
     }
 
 

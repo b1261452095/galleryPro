@@ -1,8 +1,11 @@
 package com.tt.ttpictureserver.model.picture.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.qcloud.cos.transfer.Upload;
 import com.tt.ttpictureserver.common.BaseResponse;
+import com.tt.ttpictureserver.model.picture.domain.dto.PictureQueryRequest;
 import com.tt.ttpictureserver.model.picture.domain.dto.PictureUploadRequest;
 import com.tt.ttpictureserver.model.picture.domain.dto.UploadPictureResult;
 import com.tt.ttpictureserver.model.picture.domain.entity.Picture;
@@ -18,6 +21,35 @@ import javax.servlet.http.HttpServletRequest;
 * @createDate 2026-01-09 17:19:41
 */
 public interface PictureService extends IService<Picture> {
-
+    /**
+     * 上传图片
+     * @param multipartFile
+     * @param pictureUploadRequest
+     * @param loginUser
+     * @return PictureVo
+     */
     public PictureVo uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser);
+
+    /**
+     * 查询图片列表
+     * @param pictureQueryRequest
+     * @return QueryWrapper<Picture>
+     */
+    public QueryWrapper<Picture> getQueryWrapper(PictureQueryRequest pictureQueryRequest);
+
+    /**
+     * 获取图片详情（脱敏）
+     * @param picture
+     * @param request
+     * @return PictureVo
+     */
+    public PictureVo getPictureVo(Picture picture,HttpServletRequest request);
+
+    /**
+     * 获取图片列表（脱敏）
+     * @param picturePage
+     * @param request
+     * @return Page<PictureVo>
+     */
+    public Page<PictureVo> getPictureVoPage(Page<Picture> picturePage,HttpServletRequest request);
 }
