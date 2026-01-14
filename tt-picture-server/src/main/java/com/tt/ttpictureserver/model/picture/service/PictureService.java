@@ -16,22 +16,25 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 
 /**
-* @author bianhongbin
-* @description 针对表【picture(图片)】的数据库操作Service
-* @createDate 2026-01-09 17:19:41
-*/
+ * @author bianhongbin
+ * @description 针对表【picture(图片)】的数据库操作Service
+ * @createDate 2026-01-09 17:19:41
+ */
 public interface PictureService extends IService<Picture> {
     /**
      * 上传图片
+     * 
      * @param multipartFile
      * @param pictureUploadRequest
      * @param loginUser
      * @return PictureVo
      */
-    public PictureVo uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest, User loginUser);
+    public PictureVo uploadPicture(MultipartFile multipartFile, PictureUploadRequest pictureUploadRequest,
+            User loginUser);
 
     /**
      * 查询图片列表
+     * 
      * @param pictureQueryRequest
      * @return QueryWrapper<Picture>
      */
@@ -39,17 +42,40 @@ public interface PictureService extends IService<Picture> {
 
     /**
      * 获取图片详情（脱敏）
+     * 
      * @param picture
      * @param request
      * @return PictureVo
      */
-    public PictureVo getPictureVo(Picture picture,HttpServletRequest request);
+    public PictureVo getPictureVo(Picture picture, HttpServletRequest request);
 
     /**
      * 获取图片列表（脱敏）
+     * 
      * @param picturePage
      * @param request
      * @return Page<PictureVo>
      */
-    public Page<PictureVo> getPictureVoPage(Page<Picture> picturePage,HttpServletRequest request);
+    public Page<PictureVo> getPictureVoPage(Page<Picture> picturePage, HttpServletRequest request);
+
+    /**
+     * 删除图片（根据配置策略）
+     * 
+     * @param id        图片ID
+     * @param loginUser 当前登录用户
+     */
+    void deletePicture(Long id, User loginUser);
+
+    /**
+     * 清理过期的软删除图片（定时任务调用）
+     */
+    void cleanupExpiredPictures();
+
+    /**
+     * 从URL中提取OSS文件的key
+     * 
+     * @param url 图片URL
+     * @return OSS文件key
+     */
+    String extractKeyFromUrl(String url);
 }

@@ -63,8 +63,6 @@ public class CosClientConfig {
      */
     private List<String> suffixList;
 
-
-
     /**
      * 创建 COSClient Bean
      */

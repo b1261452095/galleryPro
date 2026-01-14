@@ -58,3 +58,16 @@ knife4j:
         api-rule: package
         api-rule-resources:
           - com.tt.ttpictureserver
+
+# 图片删除配置
+picture:
+  delete:
+    # 删除策略: IMMEDIATE(立即删除), SOFT_DELETE(软删除), ASYNC(异步删除)
+    strategy: SOFT_DELETE
+    # 软删除保留天数（仅在 SOFT_DELETE 策略下生效）
+    retention-days: 0
+    # 定时清理任务 cron 表达式（每天凌晨3点执行）
+#    cleanup-cron: "0 0 3 * * ?"
+    cleanup-cron: "0 */1 * * * ?"
+    # 是否启用异步删除（仅在 ASYNC 策略下生效）
+    async-enabled: false

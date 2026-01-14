@@ -139,19 +139,14 @@ public class FileController {
     @DeleteMapping("/picture/delete")
     public BaseResponse<String> deletePicture(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest.getId() == null || deleteRequest.getId() <= 0) {
-            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User loginUser = userService.getLoginUser(request);
         Long id = deleteRequest.getId();
-        //判断是否存在
-        Picture oldPicture = pictureService.getById(id);
-        ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
-        //本人和管理员可删除
-        if (!oldPicture.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-        }
-        boolean b = pictureService.removeById(id);
-        ThrowUtils.throwIf(!b,ErrorCode.SYSTEM_ERROR);
+
+        // 使用新的删除方法（支持配置策略）
+        pictureService.deletePicture(id, loginUser);
+
         return BaseResponse.success("删除成功");
     }
 }

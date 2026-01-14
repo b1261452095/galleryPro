@@ -10,9 +10,10 @@ import java.util.Date;
 
 /**
  * 图片
+ * 
  * @TableName picture
  */
-@TableName(value ="picture")
+@TableName(value = "picture")
 @Data
 public class Picture implements Serializable {
     /**
@@ -96,7 +97,7 @@ public class Picture implements Serializable {
      * 是否删除
      */
     @TableLogic
-    private Integer isdelete;
+    private Integer isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
