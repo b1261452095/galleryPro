@@ -61,9 +61,8 @@ declare namespace API {
     message?: string
   }
 
-  type deletePictureUsingDELETEParams = {
-    /** pictureId */
-    pictureId: number
+  type DeleteRequest = {
+    id?: number
   }
 
   type deleteUserUsingDELETEParams = {
@@ -143,6 +142,7 @@ declare namespace API {
     sortField?: string
     sortOrder?: string
     tags?: string[]
+    url?: string
     userId?: number
   }
 

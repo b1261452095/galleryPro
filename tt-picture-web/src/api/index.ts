@@ -3,10 +3,10 @@
 // API 更新时间：
 // API 唯一标识：
 import * as basicController from './basicController'
-import * as wenjianjichucaozuo from './wenjianjichucaozuo'
+import * as tupianguanli from './tupianguanli'
 import * as yonghuguanli from './yonghuguanli'
 export default {
   basicController,
-  wenjianjichucaozuo,
+  tupianguanli,
   yonghuguanli,
 }

@@ -14,11 +14,6 @@ const router = createRouter({
           component: () => import('../views/HomePage.vue'),
         },
         {
-          path: 'gallery',
-          name: 'gallery',
-          component: () => import('../views/GalleryPage.vue'),
-        },
-        {
           path: 'upload',
           name: 'upload',
           component: () => import('../views/UploadPage.vue'),
@@ -33,6 +28,12 @@ const router = createRouter({
           path: 'admin/user',
           name: 'admin_user',
           component: () => import('../views/admin/UserManagePage.vue'),
+          meta: { requiresAuth: true, requiresAdmin: true }, // 需要登录且需要管理员权限
+        },
+        {
+          path: 'admin/picture',
+          name: 'admin_picture',
+          component: () => import('../views/admin/PictureManagePage.vue'),
           meta: { requiresAuth: true, requiresAdmin: true }, // 需要登录且需要管理员权限
         },
       ],

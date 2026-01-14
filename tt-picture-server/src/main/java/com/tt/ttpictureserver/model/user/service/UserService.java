@@ -1,7 +1,6 @@
 package com.tt.ttpictureserver.model.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.tt.ttpictureserver.common.BaseResponse;
 import com.tt.ttpictureserver.common.DeleteRequest;
 import com.tt.ttpictureserver.model.user.domain.dto.*;
@@ -9,7 +8,6 @@ import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.tt.ttpictureserver.model.user.domain.vo.LoginUserVo;
 import com.tt.ttpictureserver.model.user.domain.vo.UserVo;
-import org.springframework.beans.BeanUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -31,6 +29,7 @@ public interface UserService extends IService<User> {
 
      /**
       * 用户登录
+      * 
       * @param userAccount
       * @param password
       * @param request
@@ -38,9 +37,9 @@ public interface UserService extends IService<User> {
       */
      LoginUserVo userLogin(String userAccount, String password, HttpServletRequest request);
 
-
      /**
       * 获取当前登录用户
+      * 
       * @param request
       * @return User
       */
@@ -48,10 +47,11 @@ public interface UserService extends IService<User> {
 
      /**
       * 用户数据脱敏
+      * 
       * @param User
       * @return LoginUserVo
       */
-     LoginUserVo  getLoginUserVo(User User);
+     LoginUserVo getLoginUserVo(User User);
 
      /**
       * 密码加盐
@@ -61,7 +61,6 @@ public interface UserService extends IService<User> {
       */
      String getEncryptPassword(String password);
 
-
      /**
       * 用户列表查询
       *
@@ -70,9 +69,9 @@ public interface UserService extends IService<User> {
       */
      QueryWrapper<User> getQueryRequest(UserQueryRequest userQueryRequest);
 
-
      /**
       * 用户新增
+      * 
       * @param userAddRequest
       * @return BaseResponse<Long>
       */
@@ -80,6 +79,7 @@ public interface UserService extends IService<User> {
 
      /**
       * 用户删除
+      * 
       * @param deleteRequest
       * @return BaseResponse<Boolean>
       */
@@ -87,6 +87,7 @@ public interface UserService extends IService<User> {
 
      /**
       * 用户修修改
+      * 
       * @param userUpdateRequest
       * @return BaseResponse<Boolean>
       */
@@ -94,6 +95,7 @@ public interface UserService extends IService<User> {
 
      /**
       * 获取单个脱敏的用户信息
+      * 
       * @param user
       * @return UserVo
       */
@@ -101,6 +103,7 @@ public interface UserService extends IService<User> {
 
      /**
       * 获取用户列表(脱敏)
+      * 
       * @param userList 用户列表
       * @return UserVo
       */
@@ -108,6 +111,7 @@ public interface UserService extends IService<User> {
 
      /**
       * 是否为管理员
+      * 
       * @param user 用户
       * @return boolean
       */

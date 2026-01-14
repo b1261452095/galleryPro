@@ -1,6 +1,5 @@
 package com.tt.ttpictureserver.enums;
 
-import lombok.Data;
 import lombok.Getter;
 
 /**
@@ -12,15 +11,15 @@ import lombok.Getter;
  */
 @Getter
 public enum UserRoleEnum {
-    
+
     USER("user", "普通用户"),
     ADMIN("admin", "管理员");
-    
-    //定义属性
+
+    // 定义属性
     private final String code;
     private final String desc;
 
-    //构造方法
+    // 构造方法
     UserRoleEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;

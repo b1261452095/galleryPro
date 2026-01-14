@@ -1,7 +1,6 @@
 package generator.domain;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
@@ -9,9 +8,10 @@ import lombok.Data;
 
 /**
  * 图片
+ * 
  * @TableName picture
  */
-@TableName(value ="picture")
+@TableName(value = "picture")
 @Data
 public class Picture {
     /**
@@ -108,21 +108,32 @@ public class Picture {
         }
         Picture other = (Picture) that;
         return (this.getId() == null ? other.getId() == null : this.getId().equals(other.getId()))
-            && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
-            && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
-            && (this.getIntroduction() == null ? other.getIntroduction() == null : this.getIntroduction().equals(other.getIntroduction()))
-            && (this.getCategory() == null ? other.getCategory() == null : this.getCategory().equals(other.getCategory()))
-            && (this.getTags() == null ? other.getTags() == null : this.getTags().equals(other.getTags()))
-            && (this.getPicsize() == null ? other.getPicsize() == null : this.getPicsize().equals(other.getPicsize()))
-            && (this.getPicwidth() == null ? other.getPicwidth() == null : this.getPicwidth().equals(other.getPicwidth()))
-            && (this.getPicheight() == null ? other.getPicheight() == null : this.getPicheight().equals(other.getPicheight()))
-            && (this.getPicscale() == null ? other.getPicscale() == null : this.getPicscale().equals(other.getPicscale()))
-            && (this.getPicformat() == null ? other.getPicformat() == null : this.getPicformat().equals(other.getPicformat()))
-            && (this.getUserid() == null ? other.getUserid() == null : this.getUserid().equals(other.getUserid()))
-            && (this.getCreatetime() == null ? other.getCreatetime() == null : this.getCreatetime().equals(other.getCreatetime()))
-            && (this.getEdittime() == null ? other.getEdittime() == null : this.getEdittime().equals(other.getEdittime()))
-            && (this.getUpdatetime() == null ? other.getUpdatetime() == null : this.getUpdatetime().equals(other.getUpdatetime()))
-            && (this.getIsdelete() == null ? other.getIsdelete() == null : this.getIsdelete().equals(other.getIsdelete()));
+                && (this.getUrl() == null ? other.getUrl() == null : this.getUrl().equals(other.getUrl()))
+                && (this.getName() == null ? other.getName() == null : this.getName().equals(other.getName()))
+                && (this.getIntroduction() == null ? other.getIntroduction() == null
+                        : this.getIntroduction().equals(other.getIntroduction()))
+                && (this.getCategory() == null ? other.getCategory() == null
+                        : this.getCategory().equals(other.getCategory()))
+                && (this.getTags() == null ? other.getTags() == null : this.getTags().equals(other.getTags()))
+                && (this.getPicsize() == null ? other.getPicsize() == null
+                        : this.getPicsize().equals(other.getPicsize()))
+                && (this.getPicwidth() == null ? other.getPicwidth() == null
+                        : this.getPicwidth().equals(other.getPicwidth()))
+                && (this.getPicheight() == null ? other.getPicheight() == null
+                        : this.getPicheight().equals(other.getPicheight()))
+                && (this.getPicscale() == null ? other.getPicscale() == null
+                        : this.getPicscale().equals(other.getPicscale()))
+                && (this.getPicformat() == null ? other.getPicformat() == null
+                        : this.getPicformat().equals(other.getPicformat()))
+                && (this.getUserid() == null ? other.getUserid() == null : this.getUserid().equals(other.getUserid()))
+                && (this.getCreatetime() == null ? other.getCreatetime() == null
+                        : this.getCreatetime().equals(other.getCreatetime()))
+                && (this.getEdittime() == null ? other.getEdittime() == null
+                        : this.getEdittime().equals(other.getEdittime()))
+                && (this.getUpdatetime() == null ? other.getUpdatetime() == null
+                        : this.getUpdatetime().equals(other.getUpdatetime()))
+                && (this.getIsdelete() == null ? other.getIsdelete() == null
+                        : this.getIsdelete().equals(other.getIsdelete()));
     }
 
     @Override

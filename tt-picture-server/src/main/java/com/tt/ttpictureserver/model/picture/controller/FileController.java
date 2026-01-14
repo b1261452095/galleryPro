@@ -5,12 +5,13 @@ import com.qcloud.cos.model.COSObject;
 import com.qcloud.cos.model.COSObjectInputStream;
 import com.qcloud.cos.utils.IOUtils;
 import com.tt.ttpictureserver.common.BaseResponse;
+import com.tt.ttpictureserver.common.DeleteRequest;
 import com.tt.ttpictureserver.exception.BusinessException;
 import com.tt.ttpictureserver.exception.ErrorCode;
+import com.tt.ttpictureserver.exception.ThrowUtils;
 import com.tt.ttpictureserver.manager.CosManager;
 import com.tt.ttpictureserver.model.picture.domain.dto.PictureQueryRequest;
 import com.tt.ttpictureserver.model.picture.domain.dto.PictureUploadRequest;
-import com.tt.ttpictureserver.model.picture.domain.dto.UploadPictureResult;
 import com.tt.ttpictureserver.model.picture.domain.entity.Picture;
 import com.tt.ttpictureserver.model.picture.domain.vo.PictureVo;
 import com.tt.ttpictureserver.model.picture.service.PictureService;
@@ -35,7 +36,7 @@ import java.io.IOException;
  * @date 2026-01-09 16:27
  */
 @Slf4j
-@Api(tags = "文件基础操作")
+@Api(tags = "图片管理")
 @RestController
 public class FileController {
 
@@ -135,10 +136,22 @@ public class FileController {
     }
 
     @ApiOperation("删除图片")
-    @DeleteMapping("/picture/{pictureId}")
-    public BaseResponse<String> deletePicture(@PathVariable("pictureId") Long pictureId) {
-        // pictureService.deletePicture(pictureId);
+    @DeleteMapping("/picture/delete")
+    public BaseResponse<String> deletePicture(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
+        if (deleteRequest.getId() == null || deleteRequest.getId() <= 0) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
+        }
+        User loginUser = userService.getLoginUser(request);
+        Long id = deleteRequest.getId();
+        //判断是否存在
+        Picture oldPicture = pictureService.getById(id);
+        ThrowUtils.throwIf(oldPicture == null, ErrorCode.NOT_FOUND_ERROR);
+        //本人和管理员可删除
+        if (!oldPicture.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
+        }
+        boolean b = pictureService.removeById(id);
+        ThrowUtils.throwIf(!b,ErrorCode.SYSTEM_ERROR);
         return BaseResponse.success("删除成功");
     }
-
 }
