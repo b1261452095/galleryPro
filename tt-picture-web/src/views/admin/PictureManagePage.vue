@@ -3,9 +3,10 @@ import { ref, onMounted } from 'vue'
 import { message } from 'ant-design-vue'
 import type { UploadProps, UploadFile } from 'ant-design-vue'
 import {
-  listPictureByPageSimpleUsingPost,
-  deletePictureUsingDelete,
-  uploadPictureUsingPost,
+  listPictureByPageSimpleUsingPost2,
+  deletePictureUsingDelete2,
+  uploadPictureUsingPost2,
+  updatePictureUsingPut1,
 } from '@/api/tupianguanli'
 
 // 搜索表单
@@ -28,11 +29,15 @@ const fileList = ref<UploadFile[]>([])
 
 // 上传表单数据
 const uploadForm = ref({
+  id: undefined as number | undefined,
   name: '',
   introduction: '',
   category: '',
   tags: [] as string[],
 })
+
+// 是否为编辑模式
+const isEditMode = ref(false)
 
 // 标签输入
 const tagInputValue = ref('')
@@ -117,9 +122,11 @@ const columns = [
 
 // 打开上传对话框
 const showUploadModal = () => {
+  isEditMode.value = false
   uploadModalVisible.value = true
   fileList.value = []
   uploadForm.value = {
+    id: undefined,
     name: '',
     introduction: '',
     category: '',
@@ -128,11 +135,28 @@ const showUploadModal = () => {
   tagInputValue.value = ''
 }
 
+// 打开编辑对话框
+const showEditModal = (picture: API.PictureVo) => {
+  isEditMode.value = true
+  uploadModalVisible.value = true
+  fileList.value = []
+  uploadForm.value = {
+    id: picture.id,
+    name: picture.name || '',
+    introduction: picture.introduction || '',
+    category: picture.category || '',
+    tags: picture.tags || [],
+  }
+  tagInputValue.value = ''
+}
+
 // 关闭上传对话框
 const handleUploadCancel = () => {
   uploadModalVisible.value = false
+  isEditMode.value = false
   fileList.value = []
   uploadForm.value = {
+    id: undefined,
     name: '',
     introduction: '',
     category: '',
@@ -177,6 +201,12 @@ const handleFileChange: UploadProps['onChange'] = ({ fileList: newFileList }) =>
 
 // 执行上传
 const handleUploadSubmit = async () => {
+  // 编辑模式且没有选择新文件时,只更新信息
+  if (isEditMode.value && fileList.value.length === 0) {
+    await handleEditSubmit()
+    return
+  }
+
   if (fileList.value.length === 0) {
     message.warning('请选择要上传的图片')
     return
@@ -196,9 +226,10 @@ const handleUploadSubmit = async () => {
         continue
       }
 
-      const res = await uploadPictureUsingPost(
+      const res = await uploadPictureUsingPost2(
         {},
         {
+          id: uploadForm.value.id,
           name: uploadForm.value.name,
           introduction: uploadForm.value.introduction,
           category: uploadForm.value.category,
@@ -224,12 +255,49 @@ const handleUploadSubmit = async () => {
   uploadLoading.value = false
 
   if (successCount > 0) {
-    message.success(`成功上传 ${successCount} 张图片`)
+    message.success(
+      isEditMode.value ? `成功更新 ${successCount} 张图片` : `成功上传 ${successCount} 张图片`,
+    )
     handleUploadCancel()
     loadPictureList() // 刷新列表
   }
   if (failCount > 0) {
-    message.error(`${failCount} 张图片上传失败`)
+    message.error(`${failCount} 张图片${isEditMode.value ? '更新' : '上传'}失败`)
+  }
+}
+
+// 仅更新图片信息(不上传新文件)
+const handleEditSubmit = async () => {
+  if (!uploadForm.value.id) {
+    message.error('图片ID不存在')
+    return
+  }
+
+  uploadLoading.value = true
+  try {
+    // 使用专门的更新接口
+    const res = await updatePictureUsingPut1({
+      id: uploadForm.value.id,
+      name: uploadForm.value.name,
+      introduction: uploadForm.value.introduction,
+      category: uploadForm.value.category,
+      tags: uploadForm.value.tags,
+    })
+
+    if (res.code === 0) {
+      message.success('更新成功')
+      handleUploadCancel()
+      loadPictureList()
+    } else {
+      message.error(res.message || '更新失败')
+    }
+  } catch (error: unknown) {
+    const err = error as { response?: { data?: { message?: string } }; message?: string }
+    const errorMsg = err?.response?.data?.message || err?.message || '更新失败'
+    message.error(errorMsg)
+    console.error('更新错误:', error)
+  } finally {
+    uploadLoading.value = false
   }
 }
 
@@ -237,7 +305,7 @@ const handleUploadSubmit = async () => {
 const loadPictureList = async () => {
   loading.value = true
   try {
-    const res = await listPictureByPageSimpleUsingPost(searchForm.value)
+    const res = await listPictureByPageSimpleUsingPost2(searchForm.value)
     if (res.code === 0 && res.data) {
       pictureList.value = res.data.records || []
       total.value = res.data.total || 0
@@ -279,7 +347,7 @@ const handlePageChange = (page: number, pageSize: number) => {
 // 删除图片
 const handleDelete = async (id: number) => {
   try {
-    const res = await deletePictureUsingDelete({ id })
+    const res = await deletePictureUsingDelete2({ id })
     if (res.code === 0) {
       message.success('删除成功')
       loadPictureList()
@@ -424,6 +492,7 @@ onMounted(() => {
           <template v-else-if="column.key === 'action'">
             <a-space>
               <a-button type="link" size="small" @click="handleView(record)">查看</a-button>
+              <a-button type="link" size="small" @click="showEditModal(record)">编辑</a-button>
               <a-popconfirm
                 title="确定要删除这张图片吗？"
                 ok-text="确定"
@@ -452,16 +521,17 @@ onMounted(() => {
       />
     </div>
 
-    <!-- 上传对话框 -->
+    <!-- 上传/编辑对话框 -->
     <a-modal
       v-model:open="uploadModalVisible"
-      title="上传图片"
+      :title="isEditMode ? '编辑图片' : '上传图片'"
       :confirm-loading="uploadLoading"
       @ok="handleUploadSubmit"
       @cancel="handleUploadCancel"
     >
       <div class="upload-form">
         <a-upload-dragger
+          v-if="!isEditMode"
           v-model:file-list="fileList"
           name="file"
           :multiple="true"
@@ -474,6 +544,15 @@ onMounted(() => {
           <p class="ant-upload-text">点击或拖拽图片到此区域上传</p>
           <p class="ant-upload-hint">支持单次上传多张图片，每张图片不超过 10MB</p>
         </a-upload-dragger>
+
+        <a-alert
+          v-else
+          message="编辑模式"
+          description="当前为编辑模式,只会更新图片信息,不会替换图片文件"
+          type="info"
+          show-icon
+          style="margin-bottom: 16px"
+        />
 
         <a-divider>图片信息</a-divider>
 

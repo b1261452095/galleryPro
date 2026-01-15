@@ -1,18 +1,13 @@
 package com.tt.ttpictureserver.model.picture.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.NumberUtil;
+
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.qcloud.cos.model.PutObjectResult;
-import com.qcloud.cos.model.ciModel.persistence.ImageInfo;
-import com.tt.ttpictureserver.common.BaseResponse;
-import com.tt.ttpictureserver.config.CosClientConfig;
 import com.tt.ttpictureserver.config.PictureDeleteConfig;
 import com.tt.ttpictureserver.enums.DeleteStrategyEnum;
 import com.tt.ttpictureserver.exception.BusinessException;
@@ -22,6 +17,7 @@ import com.tt.ttpictureserver.manager.CosManager;
 import com.tt.ttpictureserver.manager.FileManager;
 import com.tt.ttpictureserver.mapper.PictureMapper;
 import com.tt.ttpictureserver.model.picture.domain.dto.PictureQueryRequest;
+import com.tt.ttpictureserver.model.picture.domain.dto.PictureUpdateRequest;
 import com.tt.ttpictureserver.model.picture.domain.dto.PictureUploadRequest;
 import com.tt.ttpictureserver.model.picture.domain.dto.UploadPictureResult;
 import com.tt.ttpictureserver.model.picture.domain.entity.Picture;
@@ -33,15 +29,11 @@ import com.tt.ttpictureserver.model.user.domain.entity.User;
 import com.tt.ttpictureserver.model.user.domain.vo.UserVo;
 import com.tt.ttpictureserver.model.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.net.URL;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -92,12 +84,18 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         Picture picture = new Picture();
         picture.setUserId(loginUser.getId());
         picture.setUrl(uploadPictureResult.getUrl());
-        picture.setName(uploadPictureResult.getPicName());
+        // 优先使用用户提供的名称,如果没有则使用文件名
+        picture.setName(StrUtil.isNotBlank(pictureUploadRequest.getName())
+                ? pictureUploadRequest.getName()
+                : uploadPictureResult.getPicName());
         picture.setPicSize(uploadPictureResult.getPicSize());
         picture.setPicScale(uploadPictureResult.getPicScale());
         picture.setPicFormat(uploadPictureResult.getPicFormat());
         picture.setPicWidth(uploadPictureResult.getPicWidth());
         picture.setPicHeight(uploadPictureResult.getPicHeight());
+        picture.setIntroduction(pictureUploadRequest.getIntroduction());
+        picture.setCategory(pictureUploadRequest.getCategory());
+        picture.setTags(JSONUtil.toJsonStr(pictureUploadRequest.getTags()));
         if (pictureId != null) {
             picture.setId(pictureId);
             // 若不为空 更新编辑时间
@@ -105,6 +103,41 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         }
         boolean result = this.saveOrUpdate(picture);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "保存图片信息失败");
+        return PictureVo.objToVo(picture);
+    }
+
+    @Override
+    public PictureVo updatePicture(PictureUpdateRequest pictureUpdateRequest, User loginUser) {
+        // 1. 参数校验
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.NO_AUTH_ERROR);
+        ThrowUtils.throwIf(pictureUpdateRequest == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(pictureUpdateRequest.getId() == null, ErrorCode.PARAMS_ERROR);
+        // 2. 查询图片并校验权限
+        Picture picture = this.getById(pictureUpdateRequest.getId());
+        ThrowUtils.throwIf(picture == null, ErrorCode.NOT_FOUND_ERROR, "图片不存在");
+        // 必须是管理员或本人才可以修改
+        if (!picture.getUserId().equals(loginUser.getId()) && !userService.isAdmin(loginUser)) {
+            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "无权限修改");
+        }
+        // 3. 更新图片信息
+        if (pictureUpdateRequest.getName() != null) {
+            picture.setName(pictureUpdateRequest.getName());
+        }
+        if (pictureUpdateRequest.getIntroduction() != null) {
+            picture.setIntroduction(pictureUpdateRequest.getIntroduction());
+        }
+        if (pictureUpdateRequest.getCategory() != null) {
+            picture.setCategory(pictureUpdateRequest.getCategory());
+        }
+        if (pictureUpdateRequest.getTags() != null) {
+            picture.setTags(JSONUtil.toJsonStr(pictureUpdateRequest.getTags()));
+        }
+        // 4. 设置编辑时间
+        picture.setEditTime(new Date());
+        // 5. 更新数据库
+        boolean result = this.updateById(picture);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR, "更新图片信息失败");
+        log.info("图片信息更新成功: id={}, userId={}", picture.getId(), loginUser.getId());
         return PictureVo.objToVo(picture);
     }
 

@@ -1,5 +1,5 @@
 declare namespace API {
-  type addUserUsingPOSTParams = {
+  type addUserUsingPOST1Params = {
     userAccount?: string
     userAvatar?: string
     userName?: string
@@ -7,57 +7,9 @@ declare namespace API {
     userRole?: string
   }
 
-  type BaseResponseBoolean_ = {
-    code?: number
-    data?: boolean
-    message?: string
-  }
-
-  type BaseResponseLoginUserVo_ = {
-    code?: number
-    data?: LoginUserVo
-    message?: string
-  }
-
-  type BaseResponseLong_ = {
-    code?: number
-    data?: number
-    message?: string
-  }
-
-  type BaseResponseObject_ = {
+  type BaseResponse = {
     code?: number
     data?: Record<string, any>
-    message?: string
-  }
-
-  type BaseResponsePagePicture_ = {
-    code?: number
-    data?: PagePicture_
-    message?: string
-  }
-
-  type BaseResponsePagePictureVo_ = {
-    code?: number
-    data?: PagePictureVo_
-    message?: string
-  }
-
-  type BaseResponsePageUserVo_ = {
-    code?: number
-    data?: PageUserVo_
-    message?: string
-  }
-
-  type BaseResponsePictureVo_ = {
-    code?: number
-    data?: PictureVo
-    message?: string
-  }
-
-  type BaseResponseString_ = {
-    code?: number
-    data?: string
     message?: string
   }
 
@@ -65,66 +17,13 @@ declare namespace API {
     id?: number
   }
 
-  type deleteUserUsingDELETEParams = {
+  type deleteUserUsingDELETE1Params = {
     id?: number
   }
 
-  type helloUsingGETParams = {
+  type helloUsingGET1Params = {
     /** name */
     name: string
-  }
-
-  type LoginUserVo = {
-    createTime?: string
-    id?: number
-    userAccount?: string
-    userAvatar?: string
-    userName?: string
-    userProfile?: string
-    userRole?: string
-  }
-
-  type PagePicture_ = {
-    current?: number
-    pages?: number
-    records?: Picture[]
-    size?: number
-    total?: number
-  }
-
-  type PagePictureVo_ = {
-    current?: number
-    pages?: number
-    records?: PictureVo[]
-    size?: number
-    total?: number
-  }
-
-  type PageUserVo_ = {
-    current?: number
-    pages?: number
-    records?: UserVo[]
-    size?: number
-    total?: number
-  }
-
-  type Picture = {
-    category?: string
-    createTime?: string
-    editTime?: string
-    id?: number
-    introduction?: string
-    isdelete?: number
-    name?: string
-    picFormat?: string
-    picHeight?: number
-    picScale?: number
-    picSize?: number
-    picWidth?: number
-    tags?: string
-    updateTime?: string
-    url?: string
-    userId?: number
   }
 
   type PictureQueryRequest = {
@@ -146,41 +45,54 @@ declare namespace API {
     userId?: number
   }
 
-  type PictureVo = {
+  type PictureUpdateRequest = {
     category?: string
-    createTime?: string
-    editTime?: string
     id?: number
     introduction?: string
     name?: string
-    picFormat?: string
-    picHeight?: number
-    picScale?: number
-    picSize?: number
-    picWidth?: number
     tags?: string[]
-    updateTime?: string
-    url?: string
-    user?: UserVo
-    userId?: number
   }
 
-  type test2UsingGETParams = {
+  type PictureVo = {
+    id?: number
+    url?: string
+    name?: string
+    introduction?: string
+    category?: string
+    tags?: string[]
+    picSize?: number
+    picWidth?: number
+    picHeight?: number
+    picScale?: number
+    picFormat?: string
+    userId?: number
+    createTime?: string
+    editTime?: string
+    updateTime?: string
+    user?: any
+  }
+
+  type test2UsingGET1Params = {
     /** name */
     name: string
   }
 
-  type testDownloadUsingGETParams = {
+  type testDownloadUsingGET1Params = {
+    /** param0 */
+    param0?: string
+  }
+
+  type testDownloadUsingGET2Params = {
     /** filepath */
     filepath?: string
   }
 
-  type testUsingGETParams = {
+  type testUsingGET1Params = {
     /** name */
     name: string
   }
 
-  type updateUserUsingPUTParams = {
+  type updateUserUsingPUT1Params = {
     id?: number
     userAvatar?: string
     userName?: string
@@ -188,8 +100,20 @@ declare namespace API {
     userRole?: string
   }
 
-  type uploadPictureUsingPOSTParams = {
+  type uploadPictureUsingPOST1Params = {
+    category?: string
     id?: number
+    introduction?: string
+    name?: string
+    tags?: string[]
+  }
+
+  type uploadPictureUsingPOST2Params = {
+    category?: string
+    id?: number
+    introduction?: string
+    name?: string
+    tags?: string[]
   }
 
   type UserLoginRequest = {
@@ -218,15 +142,5 @@ declare namespace API {
     surePassword: string
     /** 账号 */
     userAccount: string
-  }
-
-  type UserVo = {
-    createTime?: string
-    id?: number
-    userAccount?: string
-    userAvatar?: string
-    userName?: string
-    userProfile?: string
-    userRole?: string
   }
 }
