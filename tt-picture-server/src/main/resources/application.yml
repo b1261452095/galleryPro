@@ -21,6 +21,12 @@ spring:
   servlet:
     multipart:
       max-file-size: 10MB
+  # mq消息队列配置
+  rabbitmq:
+    host: 14.103.206.253
+    port: 5672
+    username: admin  # 默认账号
+    password: b1261452095  # 默认密码
 
 mybatis-plus:
   configuration:
@@ -63,11 +69,9 @@ knife4j:
 picture:
   delete:
     # 删除策略: IMMEDIATE(立即删除), SOFT_DELETE(软删除), ASYNC(异步删除)
-    strategy: SOFT_DELETE
+    strategy: ASYNC
     # 软删除保留天数（仅在 SOFT_DELETE 策略下生效）
-    retention-days: 0
+    retention-days: 1
     # 定时清理任务 cron 表达式（每天凌晨3点执行）
 #    cleanup-cron: "0 0 3 * * ?"
     cleanup-cron: "0 */1 * * * ?"
-    # 是否启用异步删除（仅在 ASYNC 策略下生效）
-    async-enabled: false

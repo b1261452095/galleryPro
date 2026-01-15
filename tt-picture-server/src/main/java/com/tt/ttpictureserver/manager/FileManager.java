@@ -5,8 +5,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.qcloud.cos.COSClient;
-import com.qcloud.cos.model.COSObject;
-import com.qcloud.cos.model.GetObjectRequest;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.model.ciModel.persistence.ImageInfo;
@@ -69,7 +67,7 @@ public class FileManager {
         String filename = multipartFile.getOriginalFilename();
         String uploadFileName = String.format("%s_%s.%s", DateUtil.formatDate(new Date()), uuid,
                 FileUtil.getSuffix(filename));
-        String uploadPath = String.format("/%s/%s", uploadPathPrefix, uploadFileName);
+        String uploadPath = String.format("%s/%s", uploadPathPrefix, uploadFileName);
         File file = null;
         try {
             file = File.createTempFile(uploadPath, null);

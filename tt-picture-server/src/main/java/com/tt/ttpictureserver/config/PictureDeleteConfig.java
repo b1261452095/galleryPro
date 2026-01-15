@@ -32,9 +32,4 @@ public class PictureDeleteConfig {
      * 默认每天凌晨3点执行
      */
     private String cleanupCron = "0 0 3 * * ?";
-
-    /**
-     * 是否启用异步删除（仅在 ASYNC 策略下生效）
-     */
-    private Boolean asyncEnabled = false;
 }

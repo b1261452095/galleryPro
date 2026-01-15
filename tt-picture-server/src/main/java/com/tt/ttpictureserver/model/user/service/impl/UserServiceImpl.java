@@ -113,35 +113,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public LoginUserVo userLogin(String userAccount, String password, HttpServletRequest request) {
-       //校验
+        // 校验
         if (StrUtil.isEmpty(userAccount) || StrUtil.isEmpty(password)) {
-           throw new BusinessException(ErrorCode.PARAMS_ERROR,"参数为空");
-       }
-        //加密
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
+        }
+        // 加密
         String encryptedPassword = getEncryptPassword(password);
-        //查询用户是否存在
+        // 查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
         queryWrapper.eq("userPassword", encryptedPassword);
         User user = this.baseMapper.selectOne(queryWrapper);
         if (user == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户不存在或密码错误");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
-        //记住用户的状态
-        request.getSession().setAttribute(USER_LOGIN_STATE,user);
+        // 记住用户的状态
+        request.getSession().setAttribute(USER_LOGIN_STATE, user);
         return this.getLoginUserVo(user);
     }
 
     @Override
     public User getLoginUser(HttpServletRequest request) {
-        //先判断是否已登录
-        Object userObj  = request.getSession().getAttribute(USER_LOGIN_STATE);
+        // 先判断是否已登录
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null || currentUser.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
 
-        //从数据库查询（可注释）
+        // 从数据库查询（可注释）
         long userId = currentUser.getId();
         currentUser = this.getById(userId);
         if (currentUser == null) {
@@ -151,12 +151,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public LoginUserVo getLoginUserVo(User user){
-        if(user == null){
+    public LoginUserVo getLoginUserVo(User user) {
+        if (user == null) {
             return null;
         }
         LoginUserVo loginUserVo = new LoginUserVo();
-        BeanUtils.copyProperties(user,loginUserVo);
+        BeanUtils.copyProperties(user, loginUserVo);
         return loginUserVo;
     }
 
@@ -179,23 +179,23 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         String sortField = userQueryRequest.getSortField();
         String sortOrder = userQueryRequest.getSortOrder();
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(ObjUtil.isNotNull(id),"id", id);
-        queryWrapper.like(StrUtil.isNotBlank(userName),"user_name", userName);
-        queryWrapper.like(StrUtil.isNotBlank(userAvatar),"user_avatar", userAvatar);
-        queryWrapper.like(StrUtil.isNotBlank(userProfile),"user_profile", userProfile);
-        queryWrapper.eq(StrUtil.isNotBlank(userRole),"user_role", userRole);
+        queryWrapper.eq(ObjUtil.isNotNull(id), "id", id);
+        queryWrapper.like(StrUtil.isNotBlank(userName), "user_name", userName);
+        queryWrapper.like(StrUtil.isNotBlank(userAvatar), "user_avatar", userAvatar);
+        queryWrapper.like(StrUtil.isNotBlank(userProfile), "user_profile", userProfile);
+        queryWrapper.eq(StrUtil.isNotBlank(userRole), "user_role", userRole);
         // 只有当 sortField 不为空时才添加排序
         if (StrUtil.isNotBlank(sortField)) {
             queryWrapper.orderBy(true, "asc".equals(sortOrder), sortField);
         }
-        return  queryWrapper;
+        return queryWrapper;
     }
 
     @Override
     public BaseResponse<Long> addUser(UserAddRequest userAddRequest) {
         ThrowUtils.throwIf(userAddRequest == null, ErrorCode.PARAMS_ERROR);
         User user = new User();
-        BeanUtils.copyProperties(userAddRequest,user);
+        BeanUtils.copyProperties(userAddRequest, user);
         final String DEFAULT_PASSWORD = "12345678";
         String encryptPassword = getEncryptPassword(DEFAULT_PASSWORD);
         user.setUserPassword(encryptPassword);
@@ -203,7 +203,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         ThrowUtils.throwIf(saveResult, ErrorCode.SUCCESS);
         return BaseResponse.success(user.getId());
     }
-
 
     @Override
     public BaseResponse<Boolean> deleteUser(DeleteRequest deleteRequest) {
@@ -220,27 +219,28 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User user = new User();
-        BeanUtils.copyProperties(userUpdateRequest,user);
+        BeanUtils.copyProperties(userUpdateRequest, user);
         boolean saveResult = this.updateById(user);
-        ThrowUtils.throwIf(!saveResult,ErrorCode.OPERATION_ERROR);
+        ThrowUtils.throwIf(!saveResult, ErrorCode.OPERATION_ERROR);
         return BaseResponse.success(true);
     }
 
     @Override
     public UserVo getUserVo(User user) {
-        if(user == null){
+        if (user == null) {
             return null;
         }
         UserVo userVo = new UserVo();
-        BeanUtils.copyProperties(user,userVo);
+        BeanUtils.copyProperties(user, userVo);
         return userVo;
     }
 
     @Override
     public List<UserVo> getUserVoList(List<User> userList) {
-        if (CollUtil.isEmpty(userList)){
+        if (CollUtil.isEmpty(userList)) {
             return new ArrayList<>();
-        };
+        }
+        ;
         return userList.stream().map(this::getUserVo).collect(Collectors.toList());
     }
 
@@ -248,6 +248,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public boolean isAdmin(User user) {
         return user != null && UserRoleEnum.ADMIN.getCode().equals(user.getUserRole());
     }
-
 
 }

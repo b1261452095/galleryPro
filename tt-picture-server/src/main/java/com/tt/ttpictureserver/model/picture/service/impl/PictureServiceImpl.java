@@ -59,13 +59,16 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     private final UserService userService;
     private final CosManager cosManager;
     private final PictureDeleteConfig pictureDeleteConfig;
+    private final com.tt.ttpictureserver.message.producer.PictureDeleteProducer pictureDeleteProducer;
 
     public PictureServiceImpl(FileManager fileManager, UserService userService,
-            CosManager cosManager, PictureDeleteConfig pictureDeleteConfig) {
+            CosManager cosManager, PictureDeleteConfig pictureDeleteConfig,
+            com.tt.ttpictureserver.message.producer.PictureDeleteProducer pictureDeleteProducer) {
         this.fileManager = fileManager;
         this.userService = userService;
         this.cosManager = cosManager;
         this.pictureDeleteConfig = pictureDeleteConfig;
+        this.pictureDeleteProducer = pictureDeleteProducer;
     }
 
     @Override
@@ -265,16 +268,16 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     /**
      * 异步删除：标记删除，后续通过消息队列异步删除OSS文件
-     * TODO: 实现消息队列发送逻辑
      */
     private void deleteAsync(Picture picture) {
-        // 先执行软删除
-        deleteSoftly(picture);
+        // 1. 先执行软删除
+        boolean removed = this.removeById(picture.getId());
+        ThrowUtils.throwIf(!removed, ErrorCode.OPERATION_ERROR, "删除图片失败");
 
-        // TODO: 发送删除消息到消息队列
-        // 示例：messageProducer.sendDeleteMessage(picture.getId(), picture.getUrl());
+        // 2. 发送删除消息到消息队列
+        pictureDeleteProducer.sendDeleteMessage(picture.getId(), picture.getUrl());
 
-        log.warn("异步删除策略暂未完全实现，已执行软删除。请实现消息队列逻辑。");
+        log.info("✅ 异步删除消息已发送到队列: pictureId={}", picture.getId());
     }
 
     @Override
@@ -295,7 +298,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             }
 
             log.info("找到 {} 条过期图片记录", expiredPictures.size());
-
+            // tt-pictures-1300273352/public/2008475666659536898/2026-01-15_JZkO4KIfLILMMpvS.png
+            // tt-pictures-1300273352/public/2008475666659536898/2026-01-15_JZkO4KIfLILMMpvS.png
             // 3. 批量删除OSS文件
             List<String> fileKeys = expiredPictures.stream()
                     .map(Picture::getUrl)
@@ -349,6 +353,12 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
             String path = urlObj.getPath();
 
             // 去掉开头的 /
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
+
+            // 处理双斜杠的情况（兼容旧数据）
+            // 例如: //public/123/image.jpg -> /public/123/image.jpg
             if (path.startsWith("/")) {
                 path = path.substring(1);
             }
