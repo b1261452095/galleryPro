@@ -11,9 +11,9 @@ spring:
     active: local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://14.103.206.253:3306/tt_pictures
-    username: root
-    password: b1261452095
+    url: jdbc:mysql://124.222.30.57:3306/tt_pictures
+    username: game
+    password: uu5!^%jg
   # Jackson 时间格式化配置
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -23,7 +23,7 @@ spring:
       max-file-size: 10MB
   # mq消息队列配置
   rabbitmq:
-    host: 14.103.206.253
+    host: 124.222.30.57
     port: 5672
     username: admin  # 默认账号
     password: b1261452095  # 默认密码

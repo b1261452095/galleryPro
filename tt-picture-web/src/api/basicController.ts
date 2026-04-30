@@ -3,12 +3,12 @@
 import request from '@/utils/request'
 
 /** hello GET /api/hello222245 */
-export async function helloUsingGet1(
+export async function helloUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.helloUsingGET1Params,
+  params: API.helloUsingGETParams,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponse>('/api/hello222245', {
+  return request<API.BaseResponseObject_>('/api/hello222245', {
     method: 'GET',
     params: {
       ...params,
@@ -18,9 +18,9 @@ export async function helloUsingGet1(
 }
 
 /** test GET /api/test */
-export async function testUsingGet1(
+export async function testUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.testUsingGET1Params,
+  params: API.testUsingGETParams,
   options?: { [key: string]: any }
 ) {
   return request<string>('/api/test', {
@@ -33,9 +33,9 @@ export async function testUsingGet1(
 }
 
 /** 测试下载文件 GET /api/test/download */
-export async function testDownloadUsingGet1(
+export async function testDownloadUsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.testDownloadUsingGET1Params,
+  params: API.testDownloadUsingGETParams,
   options?: { [key: string]: any }
 ) {
   return request<any>('/api/test/download', {
@@ -48,11 +48,7 @@ export async function testDownloadUsingGet1(
 }
 
 /** 测试上传文件 POST /api/test/upload */
-export async function testUploadUsingPost1(
-  body: {},
-  file?: File,
-  options?: { [key: string]: any }
-) {
+export async function testUploadUsingPost(body: {}, file?: File, options?: { [key: string]: any }) {
   const formData = new FormData()
 
   if (file) {
@@ -75,7 +71,7 @@ export async function testUploadUsingPost1(
     }
   })
 
-  return request<API.BaseResponse>('/api/test/upload', {
+  return request<API.BaseResponseString_>('/api/test/upload', {
     method: 'POST',
     data: formData,
     requestType: 'form',
@@ -84,9 +80,9 @@ export async function testUploadUsingPost1(
 }
 
 /** test2 GET /api/test2 */
-export async function test2UsingGet1(
+export async function test2UsingGet(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.test2UsingGET1Params,
+  params: API.test2UsingGETParams,
   options?: { [key: string]: any }
 ) {
   return request<string>('/api/test2', {

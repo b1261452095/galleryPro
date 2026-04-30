@@ -3,12 +3,12 @@
 import request from '@/utils/request'
 
 /** 新增用户（仅管理员） POST /api/user/add */
-export async function addUserUsingPost1(
+export async function addUserUsingPost(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.addUserUsingPOST1Params,
+  params: API.addUserUsingPOSTParams,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponse>('/api/user/add', {
+  return request<API.BaseResponseLong_>('/api/user/add', {
     method: 'POST',
     params: {
       ...params,
@@ -18,12 +18,12 @@ export async function addUserUsingPost1(
 }
 
 /** 删除用户（仅管理员） DELETE /api/user/delete */
-export async function deleteUserUsingDelete1(
+export async function deleteUserUsingDelete(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.deleteUserUsingDELETE1Params,
+  params: API.deleteUserUsingDELETEParams,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponse>('/api/user/delete', {
+  return request<API.BaseResponseBoolean_>('/api/user/delete', {
     method: 'DELETE',
     params: {
       ...params,
@@ -33,11 +33,11 @@ export async function deleteUserUsingDelete1(
 }
 
 /** 获取用户列表（仅管理员） POST /api/user/list */
-export async function getUserListUsingPost1(
+export async function getUserListUsingPost(
   body: API.UserQueryRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponse>('/api/user/list', {
+  return request<API.BaseResponsePageUserVo_>('/api/user/list', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -48,11 +48,11 @@ export async function getUserListUsingPost1(
 }
 
 /** 用户登录 POST /api/user/login */
-export async function registerUsingPost2(
+export async function registerUsingPost(
   body: API.UserLoginRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponse>('/api/user/login', {
+  return request<API.BaseResponseLoginUserVo_>('/api/user/login', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -63,19 +63,19 @@ export async function registerUsingPost2(
 }
 
 /** 获取登录的用户信息 GET /api/user/loginUserInfo */
-export async function getLoginUserInfoUsingGet1(options?: { [key: string]: any }) {
-  return request<API.BaseResponse>('/api/user/loginUserInfo', {
+export async function getLoginUserInfoUsingGet(options?: { [key: string]: any }) {
+  return request<API.BaseResponseLoginUserVo_>('/api/user/loginUserInfo', {
     method: 'GET',
     ...(options || {}),
   })
 }
 
 /** 用户注册 POST /api/user/register */
-export async function registerUsingPost3(
+export async function registerUsingPost1(
   body: API.UserRegisterRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponse>('/api/user/register', {
+  return request<API.BaseResponseString_>('/api/user/register', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -86,12 +86,12 @@ export async function registerUsingPost3(
 }
 
 /** 更新用户（仅管理员） PUT /api/user/update */
-export async function updateUserUsingPut1(
+export async function updateUserUsingPut(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
-  params: API.updateUserUsingPUT1Params,
+  params: API.updateUserUsingPUTParams,
   options?: { [key: string]: any }
 ) {
-  return request<API.BaseResponse>('/api/user/update', {
+  return request<API.BaseResponseBoolean_>('/api/user/update', {
     method: 'PUT',
     params: {
       ...params,
