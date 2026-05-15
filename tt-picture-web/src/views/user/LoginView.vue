@@ -24,6 +24,11 @@ const handleSubmit = async () => {
     const res = await registerUsingPost(formState)
     console.log('res:', res)
     if (res.code === 0) {
+      // 保存 sessionId 到 localStorage，用于后续请求认证
+      const loginData = res.data as API.LoginUserVo
+      if (loginData?.sessionId) {
+        localStorage.setItem('sessionId', loginData.sessionId)
+      }
       await loginUserStore.fetchLoginUser()
       message.success('登录成功')
       router.push('/')

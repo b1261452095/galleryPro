@@ -129,7 +129,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 记住用户的状态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return this.getLoginUserVo(user);
+        LoginUserVo loginUserVo = this.getLoginUserVo(user);
+        // 通过 Session ID 解决前后端分离跨域 Cookie 问题
+        loginUserVo.setSessionId(request.getSession().getId());
+        return loginUserVo;
     }
 
     @Override

@@ -17,4 +17,21 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    port: 8080,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8888',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+        configure: (proxy) => {
+          proxy.on('proxyRes', (proxyRes) => {
+            // 清除 set-cookie header，避免代理修改 cookie domain
+            delete proxyRes.headers['set-cookie']
+            delete proxyRes.headers['set-cookie']
+          })
+        },
+      },
+    },
+  },
 })

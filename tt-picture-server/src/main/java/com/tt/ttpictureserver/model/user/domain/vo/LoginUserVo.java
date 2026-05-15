@@ -47,4 +47,9 @@ public class LoginUserVo implements Serializable {
      * 创建时间
      */
     private Date createTime;
+
+    /**
+     * Session ID（用于前后端分离跨域认证）
+     */
+    private String sessionId;
 }

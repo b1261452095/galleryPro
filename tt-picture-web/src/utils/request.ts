@@ -14,10 +14,10 @@ const service: AxiosInstance = axios.create({
 // 请求拦截器
 service.interceptors.request.use(
   (config) => {
-    // 从 localStorage 获取 token
-    const token = localStorage.getItem('token')
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`
+    // Session ID 认证（解决前后端分离跨域 Cookie 问题）
+    const sessionId = localStorage.getItem('sessionId')
+    if (sessionId) {
+      config.headers['Cookie'] = `SESSION=${sessionId}`
     }
 
     // 如果是 FormData，删除 Content-Type 让浏览器自动设置（包含 boundary）
@@ -55,8 +55,9 @@ service.interceptors.response.use(
       switch (status) {
         case 401:
           message.error('未授权，请重新登录')
-          // 清除 token
+          // 清除认证信息
           localStorage.removeItem('token')
+          localStorage.removeItem('sessionId')
           // 跳转到登录页
           window.location.href = '/login'
           break

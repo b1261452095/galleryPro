@@ -2,6 +2,12 @@ server:
   port: 8888
   servlet:
     context-path: /api
+    session:
+      # Session 永不过期（设置为 0 或不设置都默认 30 分钟）
+      timeout: 0
+      cookie:
+        # Cookie 永不过期（设置为 -1 表示浏览器关闭也不删除）
+        max-age: -1
 
 spring:
   application:
@@ -14,6 +20,18 @@ spring:
     url: jdbc:mysql://124.222.30.57:3306/tt_pictures
     username: game
     password: uu5!^%jg
+  # Redis 配置
+  redis:
+    host: 124.222.30.57
+    port: 6379
+    password: b1261452095
+    database: 0
+  # Spring Session + Redis 配置
+  session:
+    store-type: redis
+    timeout: 30m
+    redis:
+      namespace: tt:session
   # Jackson 时间格式化配置
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss

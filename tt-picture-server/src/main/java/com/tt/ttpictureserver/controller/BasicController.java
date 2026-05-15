@@ -58,6 +58,7 @@ public class BasicController {
     }
 
     @ApiOperation(value = "测试上传文件")
+    @ResponseBody
     @PostMapping("/test/upload")
     public BaseResponse<String> testUpload(@RequestParam("file") MultipartFile multipartFile) {
         String filename = multipartFile.getOriginalFilename();
@@ -83,6 +84,7 @@ public class BasicController {
     }
 
     @ApiOperation(value = "测试下载文件")
+    @ResponseBody
     @GetMapping("/test/download")
     public void testDownload(String filepath, HttpServletResponse response) throws IOException {
         COSObjectInputStream cosObjectInputStream = null;
